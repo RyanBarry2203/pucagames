@@ -12,6 +12,7 @@ const RUNS = [
   { animal: "hound", trigger: "#games", direction: 1, start: "top 110%", end: "top 20%" },
   { animal: "boar", trigger: "#team", direction: -1, start: "top 145%", end: "top 72%" },
   { animal: "fox", trigger: "#lore", direction: 1, start: "top 105%", end: "top 25%" },
+  { animal: "horse", trigger: "#story", direction: -1, start: "top 105%", end: "top 25%" },
 ];
 
 export function initRunners() {
@@ -19,7 +20,8 @@ export function initRunners() {
   if (!stage || reducedMotion) {
     return;
   }
-  const painted = stage.dataset.frames === "true";
+  // animals listed in data-frames have painted reach/gather frames in assets/img/scene; the rest use line art
+  const painted = new Set((stage.dataset.frames || "").split(/\s+/));
 
   for (const run of RUNS) {
     const section = document.querySelector(run.trigger);
@@ -28,8 +30,9 @@ export function initRunners() {
     }
     const runner = document.createElement("div");
     runner.className = `runner runner--${run.animal}${run.direction < 0 ? " is-flipped" : ""}`;
-    runner.innerHTML = painted
-      ? `<div class="runner__body"><img src="assets/img/scene/${run.animal}-reach.png" alt=""><img src="assets/img/scene/${run.animal}-gather.png" alt=""></div>`
+    runner.innerHTML = painted.has(run.animal)
+      ? `<div class="runner__body is-painted"><img src="assets/img/scene/${run.animal}-reach.webp" alt="" loading="lazy">`
+        + `<img src="assets/img/scene/${run.animal}-gather.webp" alt="" loading="lazy"></div>`
       : `<div class="runner__body"><svg viewBox="0 0 400 300"><use href="#${run.animal}" /></svg></div>`;
     stage.append(runner);
 

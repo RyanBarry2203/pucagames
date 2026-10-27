@@ -11,7 +11,7 @@ export function initJourney() {
     return;
   }
   const layer = (name) => hero.querySelector(`[data-layer="${name}"]`);
-  gsap.set([layer("front"), layer("stones"), layer("mountain")], { transformOrigin: "50% 82%" });
+  gsap.set([layer("front"), layer("stones"), layer("hills"), layer("mountain")], { transformOrigin: "50% 82%" });
 
   gsap.timeline({
     defaults: { ease: "none", duration: 1 },
@@ -21,6 +21,7 @@ export function initJourney() {
     .to(hero.querySelector(".hero__scroll"), { opacity: 0, duration: 0.1 }, 0)
     .to(layer("front"), { scale: 2.6, yPercent: 28, ease: "power2.in" }, 0)
     .to(layer("stones"), { scale: 2, yPercent: 10, ease: "power1.in" }, 0)
+    .to(layer("hills"), { scale: 1.55, yPercent: 6 }, 0)
     .to(layer("mountain"), { scale: 1.3, yPercent: 3 }, 0)
     .to(layer("moon"), { scale: 0.8, yPercent: -16 }, 0)
     .to(fog, { density: 1, ease: "power2.in" }, 0)
