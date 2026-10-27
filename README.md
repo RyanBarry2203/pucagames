@@ -37,4 +37,5 @@ The studio site for Púca Games: plain HTML, CSS and JavaScript, no build step. 
 
 5. Back in **Settings → Pages**, set Custom domain to `pucagames.com`, wait for the DNS check, then tick
    **Enforce HTTPS**.
-6. Email: Cloudflare **Email → Email Routing** forwards `hello@pucagames.com` to a personal inbox for free.
+6. Email: Zoho Mail (Forever Free, EU data centre) hosts `developmentteam@pucagames.com`. Sign in at
+   <https://mail.zoho.eu>; manage users and domains at <https://mailadmin.zoho.eu>.
