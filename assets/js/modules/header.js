@@ -63,6 +63,7 @@ export function initHeader() {
     }
   }, { rootMargin: "-45% 0px -50% 0px" });
   links
+    .filter((link) => link.getAttribute("href").startsWith("#"))
     .map((link) => document.querySelector(link.getAttribute("href")))
     .filter(Boolean)
     .forEach((section) => observer.observe(section));
