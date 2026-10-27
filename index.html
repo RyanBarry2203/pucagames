@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Púca Games · Crafting legends from the old world</title>
   <meta name="description" content="Púca Games is an independent games studio from Sligo, Ireland, making dark, folklore-soaked games with sharp gunplay. Home of A Sangue Frio and Corazón Negro.">
-  <meta name="theme-color" content="#0f1513">
+  <meta name="theme-color" content="#0b110f">
   <link rel="canonical" href="https://pucagames.com/">
 
   <meta property="og:type" content="website">
@@ -25,9 +25,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/img/hero-stones.jpg">
   <link rel="stylesheet" href="assets/css/style.css">
-  <script>document.documentElement.classList.add("js");</script>
+  <script>
+    // Runs before first paint: motion follows the system setting unless the visitor chose otherwise in the footer.
+    (function () {
+      var root = document.documentElement;
+      var stored = null;
+      try { stored = localStorage.getItem("motion"); } catch (e) {}
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      root.classList.add("js");
+      root.dataset.motion = stored === "full" || stored === "reduced" ? stored : reduce ? "reduced" : "full";
+    })();
+  </script>
+  <script type="module" src="assets/js/main.js"></script>
 
   <script type="application/ld+json">
   {
@@ -37,12 +47,40 @@
     "url": "https://pucagames.com/",
     "logo": "https://pucagames.com/assets/img/logo.png",
     "email": "developmentteam@pucagames.com",
-    "address": { "@type": "PostalAddress", "addressLocality": "Sligo", "addressCountry": "IE" }
+    "address": { "@type": "PostalAddress", "addressLocality": "Sligo", "addressCountry": "IE" },
+    "founder": [
+      { "@type": "Person", "name": "Ryan Barry" },
+      { "@type": "Person", "name": "Oisin McGloin" },
+      { "@type": "Person", "name": "Oisin Roache" }
+    ]
   }
   </script>
 </head>
 <body>
+  <!-- Shared vector art. Animals are Pictish-style line art; every path uses pathLength="1" so CSS can "draw" it. -->
   <svg class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f6e9bf" />
+        <stop offset=".55" stop-color="#cdb57e" />
+        <stop offset="1" stop-color="#8c7b52" />
+      </linearGradient>
+      <linearGradient id="stoneFace" x1="0" y1="0" x2=".4" y2="1">
+        <stop offset="0" stop-color="#7d806c" />
+        <stop offset=".45" stop-color="#4b5144" />
+        <stop offset="1" stop-color="#20271f" />
+      </linearGradient>
+      <radialGradient id="moonFace" cx=".38" cy=".42" r=".7">
+        <stop offset="0" stop-color="#fbf0cc" />
+        <stop offset=".5" stop-color="#dcc58e" />
+        <stop offset="1" stop-color="#a28c5a" />
+      </radialGradient>
+    </defs>
+
+    <symbol id="spiral" viewBox="-14 -14 28 28">
+      <path d="M12 0a11 11 0 0 1-22 0a9 9 0 0 1 18 0a7 7 0 0 1-14 0a5 5 0 0 1 10 0a3 3 0 0 1-6 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </symbol>
+
     <symbol id="triquetra" viewBox="-50 -50 100 100">
       <g fill="none" stroke="currentColor" stroke-width="5">
         <circle r="22" />
@@ -51,6 +89,7 @@
         <path d="M0-44A40 40 0 0 1 0 14A40 40 0 0 1 0-44Z" transform="rotate(240)" />
       </g>
     </symbol>
+
     <symbol id="triskele" viewBox="-50 -50 100 100">
       <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
         <path id="triskele-arm" d="M0 0C0-14 16-24 28-16C40-8 36 10 22 12C10 14 6 2 14-2" />
@@ -58,6 +97,7 @@
         <use href="#triskele-arm" transform="rotate(240)" />
       </g>
     </symbol>
+
     <symbol id="corner" viewBox="0 0 80 80">
       <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M6 80V30Q6 6 30 6H80" />
@@ -67,22 +107,54 @@
         <path d="M46 6C46 16 56 18 60 12M6 46C16 46 18 56 12 60" />
       </g>
     </symbol>
+
+    <symbol id="hound" viewBox="0 0 400 300">
+      <path class="a-far" pathLength="1" d="M262 220C262 240 264 258 266 274L270 280L252 280L250 264C248 248 246 234 246 218ZM136 226C132 242 130 258 130 272L134 280L116 280L114 266C112 252 114 238 118 224Z" />
+      <path class="a-body" pathLength="1" d="M388 118C380 124 366 126 352 126C344 128 336 132 330 138C322 152 312 166 304 178C298 188 296 198 296 210C298 230 300 252 302 270L308 280L288 280L286 266C284 250 282 236 280 222C262 222 240 214 220 206C200 198 184 194 172 192C180 204 186 218 184 232C182 244 174 252 166 260L170 280L150 280L148 266C142 254 130 238 124 222C118 206 116 190 118 172C104 178 94 202 92 224C91 240 96 250 104 252C100 242 100 228 102 216C106 198 114 182 126 168C132 152 142 144 154 140C190 134 236 134 264 134C278 132 288 124 296 114C304 102 314 94 326 90C320 84 312 84 304 88C312 90 318 94 324 98C340 94 366 102 388 118Z" />
+      <path class="a-mark" pathLength="1" d="M280 178m12 0a11 11 0 0 1-22 0a9 9 0 0 1 18 0a7 7 0 0 1-14 0a5 5 0 0 1 10 0a3 3 0 0 1-6 0M152 200m12 0a11 11 0 0 1-22 0a9 9 0 0 1 18 0a7 7 0 0 1-14 0a5 5 0 0 1 10 0a3 3 0 0 1-6 0M356 126l-3 9M363 125l-1 8" />
+      <circle class="a-eye" cx="352" cy="108" r="3.2" />
+    </symbol>
+
+    <symbol id="boar" viewBox="0 0 400 300">
+      <path class="a-far" pathLength="1" d="M262 244L264 276L248 280L246 262L246 244ZM188 244L192 276L176 280L174 262L172 244Z" />
+      <path class="a-body" pathLength="1" d="M382 204L384 222C376 226 366 226 358 224C352 232 344 238 334 236C324 246 316 248 308 246C302 252 300 260 302 270L306 280L286 280L284 262C282 254 280 248 276 244C240 248 200 248 170 244C164 250 162 262 164 272L168 280L148 280L146 266C140 250 128 236 116 224C104 212 96 196 94 180C88 176 80 180 76 188C74 194 80 196 84 190C88 184 92 182 96 176C100 160 110 150 124 144C170 126 220 112 246 110L250 98L258 108L266 96L274 108L282 98L290 112L296 94L312 118C324 132 340 156 356 176C366 188 374 196 382 204Z" />
+      <path class="a-mark" pathLength="1" d="M268 192m12 0a11 11 0 0 1-22 0a9 9 0 0 1 18 0a7 7 0 0 1-14 0a5 5 0 0 1 10 0a3 3 0 0 1-6 0M132 196m12 0a11 11 0 0 1-22 0a9 9 0 0 1 18 0a7 7 0 0 1-14 0a5 5 0 0 1 10 0a3 3 0 0 1-6 0M150 132l4-10M170 124l4-10M190 118l4-10M210 113l4-10M230 110l3-10" />
+      <path class="a-body" pathLength="1" d="M346 230C352 222 356 214 354 202C350 214 346 220 338 226Z" />
+      <circle class="a-eye" cx="326" cy="156" r="3.2" />
+    </symbol>
+
+    <symbol id="fox" viewBox="0 0 400 300">
+      <path class="a-far" pathLength="1" d="M266 226L268 276L252 280L250 262L252 226ZM202 222L206 276L190 280L188 262L186 222Z" />
+      <path class="a-body" pathLength="1" d="M374 156C364 162 350 166 336 168C326 172 316 180 308 192C300 202 296 212 296 222C296 240 298 258 300 274L306 280L288 280L284 262C282 246 280 232 278 224C250 226 210 226 186 220C180 234 182 254 186 272L190 280L172 280L168 262C164 246 158 234 150 224C142 216 136 206 134 196C110 214 70 236 40 232C14 228 4 210 12 194C30 198 54 192 76 180C98 168 118 162 138 164C180 160 230 160 270 156C286 154 296 146 304 136L306 108L322 126L332 104L338 130C348 136 362 144 374 156Z" />
+      <path class="a-mark" pathLength="1" d="M280 198m12 0a11 11 0 0 1-22 0a9 9 0 0 1 18 0a7 7 0 0 1-14 0a5 5 0 0 1 10 0a3 3 0 0 1-6 0M160 202m12 0a11 11 0 0 1-22 0a9 9 0 0 1 18 0a7 7 0 0 1-14 0a5 5 0 0 1 10 0a3 3 0 0 1-6 0M26 222C34 214 36 206 32 196M336 168C330 160 322 156 312 158" />
+      <circle class="a-eye" cx="336" cy="142" r="3.2" />
+    </symbol>
+
+    <symbol id="tuft" viewBox="-20 -44 40 44">
+      <path d="M0 0Q-4-20-12-34M0 0Q2-24-1-42M0 0Q6-18 15-30M0 0Q-9-10-18-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </symbol>
   </svg>
 
   <a class="skip-link" href="#main">Skip to content</a>
 
+  <div class="cursor" aria-hidden="true" data-cursor>
+    <span class="cursor__ring"></span>
+    <span class="cursor__dot"></span>
+  </div>
+
   <header class="site-header" data-header>
+    <div class="site-header__progress" data-progress></div>
     <nav class="nav" aria-label="Main">
       <ul class="nav__list nav__list--left">
-        <li><a href="#top">Home</a></li>
         <li><a href="#games">Games</a></li>
-        <li><a href="#story">Our Story</a></li>
+        <li><a href="#team">The Púca</a></li>
+        <li><a href="#lore">Lore</a></li>
       </ul>
-      <a class="nav__brand" href="#top" aria-label="Púca Games, back to top">
+      <a class="nav__brand" href="#top" aria-label="Púca Games, back to top" data-magnetic>
         <img src="assets/img/logo.png" alt="" width="409" height="370">
       </a>
       <ul class="nav__list nav__list--right">
-        <li><a href="#lore">Lore</a></li>
+        <li><a href="#story">Story</a></li>
         <li><a href="#news">News</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -93,10 +165,10 @@
     </nav>
     <div class="mobile-menu" id="mobile-menu" hidden data-mobile-menu>
       <ul>
-        <li><a href="#top">Home</a></li>
         <li><a href="#games">Games</a></li>
-        <li><a href="#story">Our Story</a></li>
+        <li><a href="#team">The Púca</a></li>
         <li><a href="#lore">Lore</a></li>
+        <li><a href="#story">Story</a></li>
         <li><a href="#news">News</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -104,43 +176,144 @@
   </header>
 
   <main id="main">
-    <section class="hero" id="top" aria-labelledby="hero-title">
-      <div class="hero__art" aria-hidden="true">
-        <img src="assets/img/hero-stones.jpg" alt="" width="1394" height="778">
-      </div>
-      <canvas class="hero__embers" aria-hidden="true" data-embers></canvas>
-      <div class="hero__content">
-        <p class="eyebrow">An independent studio from Sligo, Ireland</p>
-        <h1 class="hero__title" id="hero-title">Crafting legends<br>from the old world</h1>
-        <p class="hero__lede">Dark folklore, sharp gunplay and stories told by firelight.</p>
-        <div class="hero__actions">
-          <a class="btn btn--primary" href="#games">Enter the Mist</a>
-          <a class="btn btn--ghost" href="#lore">Meet the Púca</a>
+    <!-- Hero: a vector night scene split into depth layers for scroll and pointer parallax. -->
+    <section class="hero" id="top" aria-labelledby="hero-title" data-scene>
+      <div class="scene" aria-hidden="true">
+        <canvas class="scene__sky" data-sky></canvas>
+
+        <div class="scene__layer scene__layer--moon" data-depth="0.08" data-speed="0.55">
+          <svg class="moon" viewBox="-260 -260 520 520">
+            <defs>
+              <mask id="crescent">
+                <circle r="170" fill="#fff" />
+                <circle cx="66" cy="-40" r="148" fill="#000" />
+              </mask>
+              <radialGradient id="moonGlow">
+                <stop offset=".45" stop-color="#ecdba6" stop-opacity=".22" />
+                <stop offset="1" stop-color="#ecdba6" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <circle class="moon__glow" r="260" fill="url(#moonGlow)" />
+            <g class="moon__ring">
+              <circle r="214" fill="none" stroke="#8c7b52" stroke-width="1.5" stroke-dasharray="2 11" />
+              <circle r="228" fill="none" stroke="#8c7b52" stroke-width="1" opacity=".6" />
+              <use href="#triskele" x="-12" y="-240" width="24" height="24" color="#cdb57e" />
+              <use href="#triskele" x="216" y="-12" width="24" height="24" color="#cdb57e" />
+              <use href="#triskele" x="-12" y="216" width="24" height="24" color="#cdb57e" />
+              <use href="#triskele" x="-240" y="-12" width="24" height="24" color="#cdb57e" />
+            </g>
+            <g mask="url(#crescent)">
+              <circle r="170" fill="url(#moonFace)" />
+              <g fill="none" stroke="#8a744a" stroke-width="2.5" stroke-linecap="round">
+                <circle r="158" opacity=".7" />
+                <circle cx="66" cy="-40" r="158" />
+                <circle cx="66" cy="-40" r="166" opacity=".5" />
+              </g>
+              <g color="#7c6842">
+                <use href="#spiral" x="-148" y="-36" width="34" height="34" />
+                <use href="#spiral" x="-128" y="40" width="30" height="30" />
+                <use href="#spiral" x="-84" y="98" width="34" height="34" />
+                <use href="#spiral" x="-20" y="128" width="26" height="26" />
+                <use href="#spiral" x="-110" y="-104" width="26" height="26" />
+                <use href="#triquetra" x="-150" y="-2" width="30" height="30" opacity=".8" />
+                <use href="#triquetra" x="46" y="118" width="30" height="30" opacity=".8" />
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <div class="scene__layer" data-depth="0.18" data-speed="0.42">
+          <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+            <path class="benbulben" d="M0 640L240 612Q320 600 372 520L414 444Q434 420 466 418L900 410Q984 412 1052 442L1240 520Q1380 580 1600 600V900H0Z" />
+            <path class="benbulben__rim" d="M414 444Q434 420 466 418L900 410Q984 412 1052 442" />
+            <g class="benbulben__gully">
+              <path d="M432 432l-14 64M450 424l-10 82M472 420l-4 72M494 420l-2 60M380 512l-6 60M402 470l-12 70" />
+            </g>
+            <path class="hills hills--far" d="M0 712Q300 650 600 690T1200 676T1600 694V900H0Z" />
+          </svg>
+        </div>
+
+        <div class="scene__layer" data-depth="0.32" data-speed="0.28">
+          <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" data-stones>
+            <path class="hills hills--mid" d="M0 772Q400 690 800 702Q1200 690 1600 772V900H0Z" />
+            <g class="stones stones--back">
+              <g class="stone" transform="translate(640 698) scale(.62)"><path class="stone__body" d="M-22 0L-20-130L-8-160L10-150L22-120L24 0Z" /><use class="stone__carve" href="#spiral" x="-10" y="-96" width="20" height="20" /></g>
+              <g class="stone" transform="translate(722 694) scale(.55)"><path class="stone__body" d="M-34 0L-30-96L-14-120L18-114L32-90L36 0Z" /><use class="stone__carve" href="#triskele" x="-14" y="-80" width="28" height="28" /></g>
+              <g class="stone" transform="translate(880 694) scale(.58)"><path class="stone__body" d="M-24 0L-28-110L-14-140L8-136L20-104L26 0Z" /><use class="stone__carve" href="#spiral" x="-11" y="-90" width="22" height="22" /></g>
+              <g class="stone" transform="translate(962 698) scale(.62)"><path class="stone__body" d="M-22 0L-20-130L-8-160L10-150L22-120L24 0Z" /><use class="stone__carve" href="#triquetra" x="-12" y="-104" width="24" height="24" /></g>
+            </g>
+            <g class="stones stones--front">
+              <g class="stone" transform="translate(540 716) scale(.9)"><path class="stone__body" d="M-24 0L-28-110L-14-140L8-136L20-104L26 0Z" /><use class="stone__carve" href="#spiral" x="-12" y="-88" width="24" height="24" /></g>
+              <g class="stone" transform="translate(664 720)"><path class="stone__body" d="M-22 0L-20-130L-8-160L10-150L22-120L24 0Z" /><use class="stone__carve" href="#triskele" x="-14" y="-108" width="28" height="28" /><use class="stone__carve" href="#spiral" x="-9" y="-60" width="18" height="18" /></g>
+              <g class="stone" transform="translate(800 724)"><path class="stone__body" d="M-34 0L-30-170L-10-208L16-196L32-160L36 0Z" /><use class="stone__carve" href="#triquetra" x="-18" y="-150" width="36" height="36" /><use class="stone__carve" href="#spiral" x="-13" y="-90" width="26" height="26" /></g>
+              <g class="stone" transform="translate(936 720)"><path class="stone__body" d="M-34 0L-30-96L-14-120L18-114L32-90L36 0Z" /><use class="stone__carve" href="#spiral" x="-14" y="-78" width="28" height="28" /></g>
+              <g class="stone" transform="translate(1062 716) scale(-.9 .9)"><path class="stone__body" d="M-22 0L-20-130L-8-160L10-150L22-120L24 0Z" /><use class="stone__carve" href="#triskele" x="-13" y="-104" width="26" height="26" /></g>
+              <path class="stone__body stone__fallen" d="M716 740L756 726L830 732L844 748L726 752Z" />
+            </g>
+          </svg>
+        </div>
+
+        <div class="scene__mist" data-depth="0.4" data-speed="0.18"></div>
+
+        <div class="scene__layer scene__layer--front" data-depth="0.6" data-speed="0">
+          <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+            <path class="hills hills--near" d="M0 806Q200 742 420 772Q620 804 800 822Q1000 806 1180 764Q1400 728 1600 780V900H0Z" />
+            <g class="beast beast--boar"><use href="#boar" x="190" y="586" width="260" height="195" /></g>
+            <g class="beast beast--hound"><use href="#hound" x="-1430" y="548" width="290" height="218" transform="scale(-1 1)" /></g>
+            <g class="beast beast--fox"><use href="#fox" x="-1390" y="660" width="190" height="143" transform="scale(-1 1)" /></g>
+            <g class="tufts" color="#2b3a2c">
+              <use href="#tuft" x="120" y="770" width="40" height="44" />
+              <use href="#tuft" x="470" y="752" width="34" height="38" />
+              <use href="#tuft" x="700" y="790" width="40" height="44" />
+              <use href="#tuft" x="980" y="782" width="36" height="40" />
+              <use href="#tuft" x="1460" y="720" width="40" height="44" />
+            </g>
+          </svg>
         </div>
       </div>
+
+      <div class="hero__content" data-hero-content>
+        <p class="eyebrow">An independent studio from Sligo, Ireland</p>
+        <h1 class="hero__title" id="hero-title" data-split>Crafting legends from the old world</h1>
+        <p class="hero__lede">Dark folklore, sharp gunplay and stories told by firelight.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#games" data-magnetic><span class="btn__shine"></span>Enter the Mist</a>
+          <a class="btn btn--ghost" href="#team" data-magnetic><span class="btn__shine"></span>Meet the Púca</a>
+        </div>
+      </div>
+
       <a class="hero__scroll" href="#games" aria-label="Scroll to our games">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6l7 6 7-6M5 12l7 6 7-6" /></svg>
+        <span class="hero__scroll-line"></span>
       </a>
     </section>
 
-    <div class="knot-band" role="presentation"></div>
+    <div class="marquee" aria-hidden="true" data-marquee>
+      <div class="marquee__track" data-marquee-track>
+        <span>Crafting legends from the old world</span><svg><use href="#triskele" /></svg>
+        <span>Púca Games</span><svg><use href="#triquetra" /></svg>
+        <span>Sligo, Ireland</span><svg><use href="#triskele" /></svg>
+        <span>Wolfhound · Boar · Fox</span><svg><use href="#triquetra" /></svg>
+      </div>
+    </div>
 
     <section class="section games" id="games" aria-labelledby="games-title">
-      <header class="section__head reveal">
+      <header class="section__head" data-reveal>
         <svg class="section__mark"><use href="#triquetra" /></svg>
-        <h2 id="games-title">Our Games</h2>
-        <p>Two hearts, two languages. Both built from the ground up for the Arkade Gaming Gun.</p>
+        <p class="eyebrow">The games</p>
+        <h2 id="games-title">Two hearts, two languages</h2>
+        <p>Both built from the ground up for the Arkade Gaming Gun, where you point a real gun at the screen and every
+          shot has to land exactly where you aim.</p>
       </header>
 
       <div class="games__grid">
-        <article class="game-card reveal">
+        <article class="game-card" data-reveal data-tilt>
           <div class="frame">
             <svg class="frame__corner frame__corner--tl"><use href="#corner" /></svg>
             <svg class="frame__corner frame__corner--tr"><use href="#corner" /></svg>
             <svg class="frame__corner frame__corner--bl"><use href="#corner" /></svg>
             <svg class="frame__corner frame__corner--br"><use href="#corner" /></svg>
             <div class="game-card__media">
-              <img src="assets/img/sangue-frio.jpg" alt="A sunset alley in a painted hillside favela, seen down the sights of a pistol, with enemies behind crates" width="960" height="540" loading="lazy">
+              <img src="assets/img/sangue-frio.jpg" alt="A sunset alley in a painted hillside favela, seen down the sights of a pistol, with enemies behind crates" width="1280" height="720" loading="lazy">
               <span class="badge badge--live">Live at Gamescom Asia</span>
             </div>
             <div class="game-card__body">
@@ -148,24 +321,24 @@
               <h3>A Sangue Frio</h3>
               <p class="game-card__tag">"In cold blood."</p>
               <p>Fight up the Morro da Aurora cover to cover. Paint up to six targets in slow-motion Sangue Frio, steady
-                your aim for the rooftop snipers, then gun your way out on the back of a getaway truck. Every shot lands
-                exactly where you point.</p>
+                your aim for the rooftop snipers, then gun your way out on the back of a getaway truck.</p>
               <dl class="game-card__meta">
                 <div><dt>Platform</dt><dd>PC · Arkade Gaming Gun</dd></div>
                 <div><dt>Showing</dt><dd>Gamescom Asia x Thailand Game Show, Bangkok, 29 Oct – 1 Nov 2026</dd></div>
               </dl>
             </div>
+            <span class="glare" aria-hidden="true"></span>
           </div>
         </article>
 
-        <article class="game-card reveal">
+        <article class="game-card" data-reveal data-tilt>
           <div class="frame">
             <svg class="frame__corner frame__corner--tl"><use href="#corner" /></svg>
             <svg class="frame__corner frame__corner--tr"><use href="#corner" /></svg>
             <svg class="frame__corner frame__corner--bl"><use href="#corner" /></svg>
             <svg class="frame__corner frame__corner--br"><use href="#corner" /></svg>
             <div class="game-card__media">
-              <img src="assets/img/corazon-negro.jpg" alt="A black sun with a blood-red corona hangs over a misty swamp as figures rise from the water" width="960" height="540" loading="lazy">
+              <img src="assets/img/corazon-negro.jpg" alt="A black sun with a blood-red corona hangs over a misty swamp as figures rise from the water" width="1138" height="640" loading="lazy">
               <span class="badge">In development</span>
             </div>
             <div class="game-card__body">
@@ -174,127 +347,184 @@
               <p class="game-card__tag">"Black heart."</p>
               <p>For five minutes you hold a swamp-side shack while a folk surgeon cuts the possessed heart out of your
                 daughter. Silver bullets, a salt star traced at a demon's feet, a pulse found through a crack in the
-                door. Things came up out of the water. Some of them knock.</p>
+                door. Some of them knock.</p>
               <dl class="game-card__meta">
                 <div><dt>Platform</dt><dd>PC · Arkade Gaming Gun</dd></div>
                 <div><dt>Status</dt><dd>Prototype in development</dd></div>
               </dl>
             </div>
+            <span class="glare" aria-hidden="true"></span>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="lore" id="lore" aria-labelledby="lore-title">
-      <div class="lore__bg" aria-hidden="true"></div>
-      <div class="lore__inner">
-        <header class="section__head reveal">
-          <svg class="section__mark"><use href="#triskele" /></svg>
-          <h2 id="lore-title">Who is the Púca?</h2>
-          <p>In Irish folklore the púca is a shapeshifter. It walks the roads at night as a black horse, a goat, a
-            hare, a hound. It can bring ruin or good fortune, and you never know which until it is too late. On
-            Samhain, the farmers leave the last of the harvest for it, just in case.</p>
+    <!-- The shapeshifter: a tall section with a sticky stage. Scroll progress picks which shape the Púca takes. -->
+    <section class="shift" id="team" aria-labelledby="team-title" data-shift>
+      <div class="shift__sticky">
+        <header class="shift__head">
+          <p class="eyebrow">The Púca</p>
+          <h2 id="team-title">One spirit, three shapes</h2>
         </header>
 
-        <ol class="shapes">
-          <li class="shape reveal">
-            <span class="shape__num">I</span>
-            <h3>The Boar</h3>
-            <p class="shape__virtue">Courage</p>
-            <p>Games that hit hard. Every shot, every scare, every impact tuned until it feels right in your hands.</p>
-          </li>
-          <li class="shape reveal">
-            <span class="shape__num">II</span>
-            <h3>The Wolfhound</h3>
-            <p class="shape__virtue">Loyalty</p>
-            <p>A small pack that builds together, plays together and listens to the people holding the controller.</p>
-          </li>
-          <li class="shape reveal">
-            <span class="shape__num">III</span>
-            <h3>The Fox</h3>
-            <p class="shape__virtue">Cunning</p>
-            <p>Clever design over big budgets. One sharp idea, carried all the way through.</p>
-          </li>
-        </ol>
+        <div class="shift__grid">
+          <div class="shift__stage" aria-hidden="true">
+            <svg class="shift__ring" viewBox="-200 -200 400 400">
+              <circle class="shift__ring-track" r="186" />
+              <circle class="shift__ring-fill" r="186" pathLength="1" data-shift-ring />
+              <g class="shift__ring-spin">
+                <circle r="170" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="1 8" />
+                <use href="#triskele" x="-11" y="-181" width="22" height="22" />
+                <use href="#triquetra" x="-11" y="159" width="22" height="22" />
+              </g>
+            </svg>
+            <svg class="shift__forms" viewBox="0 0 400 300">
+              <use class="shift__form is-active" href="#hound" data-form />
+              <use class="shift__form" href="#boar" data-form />
+              <use class="shift__form" href="#fox" data-form />
+            </svg>
+            <canvas class="shift__sparks" data-sparks></canvas>
+          </div>
+
+          <div class="shift__members">
+            <article class="member is-active" data-member>
+              <p class="member__shape">I · The Irish Wolfhound</p>
+              <h3>Ryan Barry</h3>
+              <p class="member__role">Co-founder · Tech lead</p>
+              <p class="member__virtue">Loyalty</p>
+              <p>The hound runs with the pack and never leaves it behind. Ryan keeps the code clean, the systems fast and
+                the whole team pulling in the same direction.</p>
+            </article>
+            <article class="member" data-member>
+              <p class="member__shape">II · The Boar</p>
+              <h3>Oisin McGloin</h3>
+              <p class="member__role">Co-founder</p>
+              <p class="member__virtue">Courage</p>
+              <p>The boar charges where others hesitate. Oisin takes on the hardest problems head first and doesn't stop
+                until every shot and every scare hits hard.</p>
+            </article>
+            <article class="member" data-member>
+              <p class="member__shape">III · The Fox</p>
+              <h3>Oisin Roache</h3>
+              <p class="member__role">Co-founder</p>
+              <p class="member__virtue">Cunning</p>
+              <p>The fox wins with wit, not size. Oisin finds the clever idea, the sly twist and the one sharp thought
+                that carries a whole game.</p>
+            </article>
+
+            <div class="shift__nav" role="group" aria-label="Choose a shape">
+              <button type="button" class="shift__chip is-active" data-shift-to="0" aria-pressed="true">
+                <svg viewBox="0 0 400 300"><use href="#hound" /></svg><span class="visually-hidden">Ryan Barry, the wolfhound</span>
+              </button>
+              <button type="button" class="shift__chip" data-shift-to="1" aria-pressed="false">
+                <svg viewBox="0 0 400 300"><use href="#boar" /></svg><span class="visually-hidden">Oisin McGloin, the boar</span>
+              </button>
+              <button type="button" class="shift__chip" data-shift-to="2" aria-pressed="false">
+                <svg viewBox="0 0 400 300"><use href="#fox" /></svg><span class="visually-hidden">Oisin Roache, the fox</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lore" id="lore" aria-labelledby="lore-title">
+      <div class="lore__knot" aria-hidden="true" data-depth-scroll="0.15">
+        <svg viewBox="-50 -50 100 100"><use href="#triquetra" x="-50" y="-50" width="100" height="100" /></svg>
+      </div>
+      <div class="lore__inner">
+        <p class="eyebrow" data-reveal>Who is the Púca?</p>
+        <h2 class="visually-hidden" id="lore-title">Who is the Púca?</h2>
+        <p class="lore__text" data-words>In Irish folklore the púca is a shapeshifter. It walks the roads at night as a
+          black horse, a goat, a hare, a hound. It can bring ruin or good fortune, and you never know which until it is
+          too late. On Samhain the farmers leave the last of the harvest for it, just in case.</p>
+        <p class="lore__coda" data-reveal>We took its name because we change shape too: one studio, three of us, a new
+          form for every game.</p>
       </div>
     </section>
 
     <section class="section story" id="story" aria-labelledby="story-title">
       <div class="story__grid">
-        <div class="story__text reveal">
-          <p class="eyebrow">Our story</p>
-          <h2 id="story-title">Born among the standing stones</h2>
-          <p>Púca Games comes from Sligo, in the north-west of Ireland. It's a county of old stories: Queen Maeve's
-            cairn on Knocknarea, the passage tombs of Carrowmore, and the hills and lakes Yeats kept writing about.
-            We grew up on those stories and on the games that kept us up too late.</p>
-          <p>We're a small, young team. We make games the way the old storytellers worked: short, intense and
-            built to be remembered. We would rather give you five unforgettable minutes than fifty forgettable
-            hours.</p>
-          <p>Right now that means games for the Arkade Gaming Gun, where you point a real gun at the screen and the
-            game has to answer with precision. Next, the old world. The púca is patient.</p>
+        <div class="story__text">
+          <p class="eyebrow" data-reveal>Our story</p>
+          <h2 id="story-title" data-reveal>Born under Benbulben</h2>
+          <p data-reveal>Púca Games comes from Sligo, in the north-west of Ireland. It's a county of old stories: Queen
+            Maeve's cairn on Knocknarea, the passage tombs of Carrowmore, and the flat-topped mountain on the horizon of
+            this page, Benbulben, which Yeats asked to be buried under.</p>
+          <p data-reveal>We make games the way the old storytellers worked: short, intense and built to be remembered.
+            We would rather give you five unforgettable minutes than fifty forgettable hours.</p>
         </div>
-        <figure class="story__seal reveal">
-          <div class="seal">
-            <img src="assets/img/logo.png" alt="The Púca Games crest: a boar, an Irish wolfhound and a fox inside a Celtic crescent moon" width="409" height="370" loading="lazy">
-          </div>
-          <figcaption>Three shapes, one spirit.</figcaption>
+        <figure class="story__art" data-reveal>
+          <svg class="story__mountain" viewBox="0 0 600 260" role="img" aria-labelledby="mountain-title">
+            <title id="mountain-title">Line drawing of Benbulben, Sligo's flat-topped mountain</title>
+            <path class="draw" pathLength="1" d="M0 230L90 214Q120 208 140 170L160 128Q168 116 182 115L380 110Q420 111 450 126L520 168Q560 196 600 204" />
+            <path class="draw draw--soft" pathLength="1" d="M160 128l-8 46M176 120l-6 60M194 116l-3 50M150 150l-6 40" />
+            <path class="draw draw--soft" pathLength="1" d="M0 250Q150 226 300 240T600 236" />
+            <use href="#triskele" x="440" y="20" width="40" height="40" class="story__sun" />
+          </svg>
+          <figcaption>Benbulben, Co. Sligo</figcaption>
         </figure>
       </div>
     </section>
 
-    <div class="knot-band" role="presentation"></div>
-
     <section class="section news" id="news" aria-labelledby="news-title">
-      <header class="section__head reveal">
+      <header class="section__head" data-reveal>
         <svg class="section__mark"><use href="#triquetra" /></svg>
-        <h2 id="news-title">News from the Fire</h2>
+        <p class="eyebrow">News</p>
+        <h2 id="news-title">From the fireside</h2>
       </header>
       <div class="news__grid">
-        <article class="news-card reveal">
+        <article class="news-card" data-reveal data-tilt>
           <time datetime="2026-10">October 2026</time>
           <h3>A Sangue Frio heads to Bangkok</h3>
           <p>Our rail shooter is playable at Gamescom Asia x Thailand Game Show, 29 October to 1 November. Pick up the
             gun, climb the Morro, and try to top the leaderboard.</p>
+          <span class="glare" aria-hidden="true"></span>
         </article>
-        <article class="news-card reveal">
+        <article class="news-card" data-reveal data-tilt>
           <time datetime="2026-10">October 2026</time>
           <h3>First look: Corazón Negro</h3>
           <p>A black sun over the swamp, a girl behind a sheet and three things at the door. Our second game for the
             Arkade Gaming Gun is a five-minute siege of pure dread.</p>
+          <span class="glare" aria-hidden="true"></span>
         </article>
-        <article class="news-card reveal">
+        <article class="news-card" data-reveal data-tilt>
           <time datetime="2026-10">October 2026</time>
           <h3>The púca wakes</h3>
           <p>Púca Games has a home on the web, just in time for Samhain. Follow along here for devlogs, show dates and
             first looks.</p>
+          <span class="glare" aria-hidden="true"></span>
         </article>
       </div>
     </section>
 
     <section class="section contact" id="contact" aria-labelledby="contact-title">
-      <div class="contact__panel frame reveal">
+      <div class="contact__panel frame" data-reveal>
         <svg class="frame__corner frame__corner--tl"><use href="#corner" /></svg>
         <svg class="frame__corner frame__corner--tr"><use href="#corner" /></svg>
         <svg class="frame__corner frame__corner--bl"><use href="#corner" /></svg>
         <svg class="frame__corner frame__corner--br"><use href="#corner" /></svg>
-        <svg class="section__mark"><use href="#triskele" /></svg>
-        <h2 id="contact-title">Send Word</h2>
+        <svg class="contact__knot" aria-hidden="true"><use href="#triskele" /></svg>
+        <h2 id="contact-title">Send word</h2>
         <p>Press, publishers, events, or just want to tell us what scared you? Leave an offering at the door.</p>
-        <a class="btn btn--primary" href="mailto:developmentteam@pucagames.com">developmentteam@pucagames.com</a>
+        <a class="btn btn--primary btn--email" href="mailto:developmentteam@pucagames.com" data-magnetic><span class="btn__shine"></span>developmentteam@pucagames.com</a>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="knot-band" role="presentation"></div>
+    <div class="knot-band" aria-hidden="true"></div>
     <div class="site-footer__inner">
-      <img class="site-footer__logo" src="assets/img/logo.png" alt="" width="409" height="370" loading="lazy">
+      <div class="site-footer__beasts" aria-hidden="true">
+        <svg viewBox="0 0 400 300"><use href="#hound" /></svg>
+        <svg viewBox="0 0 400 300"><use href="#boar" /></svg>
+        <svg viewBox="0 0 400 300"><use href="#fox" /></svg>
+      </div>
       <p class="site-footer__name">Púca Games</p>
       <p>Made by firelight in Sligo, Ireland.</p>
       <p class="site-footer__legal">© <span data-year>2026</span> Púca Games. All rights reserved.</p>
+      <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="true">Animations: <span data-motion-label>on</span></button>
     </div>
   </footer>
-
-  <script src="assets/js/main.js" defer></script>
 </body>
 </html>
