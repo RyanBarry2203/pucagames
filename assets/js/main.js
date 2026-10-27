@@ -22,6 +22,7 @@ import { initShapeshifter } from "./modules/shapeshifter.js";
 import { initLore } from "./modules/lore.js";
 import { initMotionToggle } from "./modules/motionToggle.js";
 import { initVelocity } from "./modules/velocity.js";
+import { initScenes } from "./modules/scenes.js";
 
 initEngine();
 initSplit();
@@ -47,6 +48,7 @@ initVelocity();
 initJourney();
 initHScroll();
 initParallax();
+initScenes();
 initRunners();
 
 for (const element of document.querySelectorAll("[data-year]")) {
