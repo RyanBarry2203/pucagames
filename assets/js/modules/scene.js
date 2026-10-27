@@ -1,7 +1,8 @@
 import { onFrame, reducedMotion, watchVisibility, clamp, lerp } from "../core/ticker.js";
 
-// Hero parallax. Each layer has a depth (how far it shifts with the pointer) and a speed (how much it lags behind
-// the scroll), so near layers slide past far ones. The standing stones' carvings glow as the pointer nears them.
+// Hero pointer parallax: each layer drifts against the pointer by its data-depth, so near layers move most.
+// It writes --px/--py, which CSS applies with the `translate` property; the scroll journey (journey.js) animates
+// `transform` on the same layers, and the two combine. The standing stones' carvings glow as the pointer nears them.
 export function initScene() {
   const hero = document.querySelector("[data-scene]");
   if (!hero || reducedMotion) {
@@ -11,9 +12,7 @@ export function initScene() {
   const layers = [...hero.querySelectorAll("[data-depth]")].map((element) => ({
     element,
     depth: Number(element.dataset.depth),
-    speed: Number(element.dataset.speed),
   }));
-  const content = hero.querySelector("[data-hero-content]");
   const visibility = watchVisibility(hero, "0px");
   let mx = 0;
   let my = 0;
@@ -25,17 +24,10 @@ export function initScene() {
     const ease = 1 - Math.pow(1 - 0.05, dt * 60);
     mx = lerp(mx, s.nx, ease);
     my = lerp(my, s.ny, ease);
-
     for (const layer of layers) {
-      const x = -mx * layer.depth * 70;
-      const y = s.scrollY * layer.speed - my * layer.depth * 34;
-      layer.element.style.setProperty("--px", `${x.toFixed(2)}px`);
-      layer.element.style.setProperty("--py", `${y.toFixed(2)}px`);
+      layer.element.style.setProperty("--px", `${(-mx * layer.depth * 80).toFixed(2)}px`);
+      layer.element.style.setProperty("--py", `${(-my * layer.depth * 40).toFixed(2)}px`);
     }
-
-    const out = clamp(s.scrollY / (s.vh * 0.7), 0, 1);
-    content.style.setProperty("--lift", `${(s.scrollY * 0.35).toFixed(1)}px`);
-    content.style.setProperty("--fade", (1 - out).toFixed(3));
   });
 
   const stones = [...hero.querySelectorAll(".stone")];

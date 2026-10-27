@@ -35,8 +35,19 @@
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       root.classList.add("js");
       root.dataset.motion = stored === "full" || stored === "reduced" ? stored : reduce ? "reduced" : "full";
+      // the intro plays once per visit, and never in gentle mode
+      var seen = false;
+      try { seen = sessionStorage.getItem("intro") === "1"; } catch (e) {}
+      if (root.dataset.motion === "full" && !seen) {
+        root.classList.add("is-loading");
+      }
     })();
   </script>
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/DrawSVGPlugin.min.js" defer></script>
+  <script src="assets/vendor/MotionPathPlugin.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
   <script type="module" src="assets/js/main.js"></script>
 
   <script type="application/ld+json">
@@ -52,6 +63,9 @@
       { "@type": "Person", "name": "Ryan Barry" },
       { "@type": "Person", "name": "Oisin McGloin" },
       { "@type": "Person", "name": "Oisin Roache" }
+    ],
+    "member": [
+      { "@type": "Person", "name": "Alex O'Donnell", "jobTitle": "3D and 2D artist" }
     ]
   }
   </script>
@@ -63,9 +77,6 @@
       <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stop-color="#f6e9bf" />
         <stop offset=".55" stop-color="#cdb57e" />
-    ],
-    "member": [
-      { "@type": "Person", "name": "Alex O'Donnell", "jobTitle": "3D and 2D artist" }
         <stop offset="1" stop-color="#8c7b52" />
       </linearGradient>
       <linearGradient id="stoneFace" x1="0" y1="0" x2=".4" y2="1">
@@ -138,6 +149,22 @@
     </symbol>
   </svg>
 
+  <div class="preloader" aria-hidden="true" data-preloader>
+    <svg class="preloader__knot" viewBox="-60 -60 120 120">
+      <circle r="52" pathLength="1" />
+      <g data-preloader-arms>
+        <path pathLength="1" d="M0 0C0-17 19-29 34-19C48-10 44 12 27 14C12 17 7 2 17-2" />
+        <path pathLength="1" d="M0 0C0-17 19-29 34-19C48-10 44 12 27 14C12 17 7 2 17-2" transform="rotate(120)" />
+        <path pathLength="1" d="M0 0C0-17 19-29 34-19C48-10 44 12 27 14C12 17 7 2 17-2" transform="rotate(240)" />
+      </g>
+    </svg>
+    <p class="preloader__name">Púca Games</p>
+    <p class="preloader__count"><span data-preloader-count>0</span>%</p>
+  </div>
+
+  <canvas class="fx" aria-hidden="true" data-fx></canvas>
+  <div class="runners" aria-hidden="true" data-runners data-frames="false"></div>
+
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="cursor" aria-hidden="true" data-cursor>
@@ -184,7 +211,7 @@
       <div class="scene" aria-hidden="true">
         <canvas class="scene__sky" data-sky></canvas>
 
-        <div class="scene__layer scene__layer--moon" data-depth="0.08" data-speed="0.55">
+        <div class="scene__layer scene__layer--moon" data-depth="0.08" data-layer="moon">
           <svg class="moon" viewBox="-260 -260 520 520">
             <defs>
               <mask id="crescent">
@@ -225,7 +252,7 @@
           </svg>
         </div>
 
-        <div class="scene__layer" data-depth="0.18" data-speed="0.42">
+        <div class="scene__layer" data-depth="0.18" data-layer="mountain">
           <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
             <path class="benbulben" d="M0 640L240 612Q320 600 372 520L414 444Q434 420 466 418L900 410Q984 412 1052 442L1240 520Q1380 580 1600 600V900H0Z" />
             <path class="benbulben__rim" d="M414 444Q434 420 466 418L900 410Q984 412 1052 442" />
@@ -236,7 +263,7 @@
           </svg>
         </div>
 
-        <div class="scene__layer" data-depth="0.32" data-speed="0.28">
+        <div class="scene__layer" data-depth="0.32" data-layer="stones">
           <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" data-stones>
             <path class="hills hills--mid" d="M0 772Q400 690 800 702Q1200 690 1600 772V900H0Z" />
             <g class="stones stones--back">
@@ -256,9 +283,10 @@
           </svg>
         </div>
 
-        <div class="scene__mist" data-depth="0.4" data-speed="0.18"></div>
+        <div class="scene__mist" data-depth="0.4"></div>
+        <canvas class="scene__fog" data-fog></canvas>
 
-        <div class="scene__layer scene__layer--front" data-depth="0.6" data-speed="0">
+        <div class="scene__layer scene__layer--front" data-depth="0.6" data-layer="front">
           <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
             <path class="hills hills--near" d="M0 806Q200 742 420 772Q620 804 800 822Q1000 806 1180 764Q1400 728 1600 780V900H0Z" />
             <g class="beast beast--boar"><use href="#boar" x="190" y="586" width="260" height="195" /></g>
@@ -285,6 +313,7 @@
         </div>
       </div>
 
+      <div class="hero__veil" aria-hidden="true"></div>
       <a class="hero__scroll" href="#games" aria-label="Scroll to our games">
         <span class="hero__scroll-line"></span>
       </a>
@@ -299,6 +328,8 @@
       </div>
     </div>
 
+    <div class="knot-rule" aria-hidden="true" data-knot></div>
+
     <section class="section games" id="games" aria-labelledby="games-title">
       <header class="section__head" data-reveal>
         <svg class="section__mark"><use href="#triquetra" /></svg>
@@ -308,7 +339,7 @@
           aimed it. That sounds simple until you try to make it feel good.</p>
       </header>
 
-      <div class="games__grid">
+      <div class="games__grid" data-hscroll>
         <article class="game-card" data-reveal data-tilt>
           <div class="frame">
             <svg class="frame__corner frame__corner--tl"><use href="#corner" /></svg>
@@ -363,8 +394,16 @@
             <span class="glare" aria-hidden="true"></span>
           </div>
         </article>
+
+        <aside class="game-teaser" data-reveal>
+          <img src="assets/img/art/chirho-gold.jpg" alt="" width="1500" height="1598" loading="lazy">
+          <p class="eyebrow">Next</p>
+          <p class="game-teaser__line">The púca has more shapes than two.</p>
+        </aside>
       </div>
     </section>
+
+    <div class="knot-rule" aria-hidden="true" data-knot></div>
 
     <!-- The shapeshifter: a tall section with a sticky stage. Scroll progress picks which shape the Púca takes. -->
     <section class="shift" id="team" aria-labelledby="team-title" data-shift>
@@ -406,7 +445,7 @@
             <article class="member" data-member>
               <p class="member__shape">II · The Boar</p>
               <h3>Oisin McGloin</h3>
-              <p class="member__role">Co-founder · Head of game design</p>
+              <p class="member__role">Co-founder · Game programmer and playtester</p>
               <p class="member__virtue">Courage</p>
               <p>The boar charges where the rest of us hesitate. Oisin goes at the hard problems head first, and doesn't
                 let go until the shots hit and the scares land. He writes the game code and plays every build. His game: Call of Duty: Black Ops zombies.</p>
@@ -414,7 +453,7 @@
             <article class="member" data-member>
               <p class="member__shape">III · The Fox</p>
               <h3>Oisin Roache</h3>
-              <p class="member__role">Co-founder · Game programmer and playtester</p>
+              <p class="member__role">Co-founder · Head of game design</p>
               <p class="member__virtue">Cunning</p>
               <p>The fox wins with wit, not size. Oisin is the one who spots the clever way round a problem, and the sly
                 twist that makes a game stick in your head. He heads up the design. His game: Ratchet &amp; Clank.</p>
@@ -437,7 +476,8 @@
     </section>
 
     <section class="lore" id="lore" aria-labelledby="lore-title">
-      <div class="lore__knot" aria-hidden="true" data-depth-scroll="0.15">
+      <div class="lore__carpet" aria-hidden="true" data-parallax="-18"></div>
+      <div class="lore__knot" aria-hidden="true">
         <svg viewBox="-50 -50 100 100"><use href="#triquetra" x="-50" y="-50" width="100" height="100" /></svg>
       </div>
       <div class="lore__inner">
@@ -450,6 +490,8 @@
           of us, and a different game every time.</p>
       </div>
     </section>
+
+    <div class="knot-rule" aria-hidden="true" data-knot></div>
 
     <section class="section story" id="story" aria-labelledby="story-title">
       <div class="story__grid">
@@ -469,6 +511,9 @@
             to end up on that gun. Come and say hello, and tell us honestly how we did.</p>
         </div>
         <figure class="story__art" data-reveal>
+          <div class="story__illumination" data-parallax="12">
+            <img src="assets/img/art/chirho-gold.jpg" alt="The Chi Rho page of the Book of Kells, an Irish manuscript made around 800 AD, recoloured in gold" width="1500" height="1598" loading="lazy">
+          </div>
           <svg class="story__mountain" viewBox="0 0 600 260" role="img" aria-labelledby="mountain-title">
             <title id="mountain-title">Line drawing of Benbulben, Sligo's flat-topped mountain</title>
             <path class="draw" pathLength="1" d="M0 230L90 214Q120 208 140 170L160 128Q168 116 182 115L380 110Q420 111 450 126L520 168Q560 196 600 204" />
@@ -480,6 +525,8 @@
         </figure>
       </div>
     </section>
+
+    <div class="knot-rule" aria-hidden="true" data-knot></div>
 
     <section class="section news" id="news" aria-labelledby="news-title">
       <header class="section__head" data-reveal>

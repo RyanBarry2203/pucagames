@@ -1,4 +1,5 @@
 import { onFrame, reducedMotion, watchVisibility, clamp } from "../core/ticker.js";
+import { scrollToY } from "../core/engine.js";
 
 const TAU = Math.PI * 2;
 
@@ -38,7 +39,7 @@ export function initShapeshifter() {
       // jump to the middle of that shape's slice of the scroll
       const total = section.offsetHeight - window.innerHeight;
       const top = section.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: top + (total * (i + 0.5)) / forms.length, behavior: reducedMotion ? "auto" : "smooth" });
+      scrollToY(top + (total * (i + 0.5)) / forms.length);
     });
   });
 
