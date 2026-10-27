@@ -8,6 +8,7 @@ import { initMagnetic } from "./modules/magnetic.js";
 import { initScene } from "./modules/scene.js";
 import { initSky } from "./modules/sky.js";
 import { initFog } from "./modules/fog.js";
+import { initWorld } from "./modules/world.js";
 import { initJourney } from "./modules/journey.js";
 import { initFx } from "./modules/fx.js";
 import { initRunners } from "./modules/runners.js";
@@ -20,6 +21,7 @@ import { initParallax } from "./modules/parallax.js";
 import { initShapeshifter } from "./modules/shapeshifter.js";
 import { initLore } from "./modules/lore.js";
 import { initMotionToggle } from "./modules/motionToggle.js";
+import { initVelocity } from "./modules/velocity.js";
 
 initEngine();
 initSplit();
@@ -29,6 +31,7 @@ initMagnetic();
 initScene();
 initSky();
 initFog();
+initWorld();
 initFx();
 initMarquee();
 initReveal();
@@ -37,6 +40,7 @@ initShapeshifter();
 initLore();
 initKnots();
 initMotionToggle();
+initVelocity();
 
 // Everything that pins or measures scroll positions is created top to bottom, so each ScrollTrigger accounts for
 // the pin spacing added above it.

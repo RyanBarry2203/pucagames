@@ -48,6 +48,14 @@
   <script src="assets/vendor/DrawSVGPlugin.min.js" defer></script>
   <script src="assets/vendor/MotionPathPlugin.min.js" defer></script>
   <script src="assets/vendor/lenis.min.js" defer></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./assets/vendor/three/three.module.min.js",
+        "three/addons/": "./assets/vendor/three/addons/"
+      }
+    }
+  </script>
   <script type="module" src="assets/js/main.js"></script>
 
   <script type="application/ld+json">
@@ -56,7 +64,7 @@
     "@type": "Organization",
     "name": "Púca Games",
     "url": "https://pucagames.com/",
-    "logo": "https://pucagames.com/assets/img/logo-hd.jpg",
+    "logo": "https://pucagames.com/assets/img/logo.png",
     "email": "developmentteam@pucagames.com",
     "address": { "@type": "PostalAddress", "addressLocality": "Sligo", "addressCountry": "IE" },
     "founder": [
@@ -90,6 +98,11 @@
         <stop offset="1" stop-color="#a28c5a" />
       </radialGradient>
     </defs>
+
+    <filter id="warp" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.006 0.035" numOctaves="2" seed="7" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" data-warp />
+    </filter>
 
     <symbol id="spiral" viewBox="-14 -14 28 28">
       <path d="M12 0a11 11 0 0 1-22 0a9 9 0 0 1 18 0a7 7 0 0 1-14 0a5 5 0 0 1 10 0a3 3 0 0 1-6 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -188,7 +201,7 @@
         <li><a href="#lore">Lore</a></li>
       </ul>
       <a class="nav__brand" href="#top" aria-label="Púca Games, back to top" data-magnetic>
-        <img src="assets/img/logo-hd.jpg" alt="" width="1024" height="1024">
+        <img src="assets/img/logo.png" alt="" width="409" height="370">
       </a>
       <ul class="nav__list nav__list--right">
         <li><a href="#story">Story</a></li>
@@ -216,6 +229,7 @@
     <!-- Hero: a painted night scene split into depth layers for scroll and pointer parallax. -->
     <section class="hero" id="top" aria-labelledby="hero-title" data-scene>
       <div class="scene" aria-hidden="true">
+        <canvas class="world" data-world></canvas>
         <img class="scene__sky-art" src="assets/img/scene/sky.jpg" alt="" width="2560" height="1429" fetchpriority="high">
         <canvas class="scene__sky" data-sky></canvas>
 
