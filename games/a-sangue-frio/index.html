@@ -34,6 +34,11 @@
       root.dataset.motion = stored === "full" || stored === "reduced" ? stored : reduce ? "reduced" : "full";
     })();
   </script>
+  <script src="/assets/vendor/gsap.min.js" defer></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="/assets/vendor/DrawSVGPlugin.min.js" defer></script>
+  <script src="/assets/vendor/MotionPathPlugin.min.js" defer></script>
+  <script src="/assets/vendor/lenis.min.js" defer></script>
   <script type="module" src="/assets/js/page.js"></script>
 
   <script type="application/ld+json">
@@ -49,7 +54,15 @@
   }
   </script>
 </head>
-<body>
+<body data-game="sangue-frio">
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <filter id="warp" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.006 0.035" numOctaves="2" seed="7" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" data-warp />
+    </filter>
+  </svg>
+  <canvas class="fx" aria-hidden="true" data-fx></canvas>
+
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="cursor" aria-hidden="true" data-cursor>
@@ -95,16 +108,39 @@
       <img class="page-hero__bg" src="/assets/img/press/a-sangue-frio-screenshot.jpg" alt="A sunset alley in a painted Rio hillside, seen over a rooftop wall with a pistol in hand" width="1920" height="1080">
       <div class="page-hero__content">
         <p class="eyebrow">Arcade rail shooter · Rio de Janeiro</p>
-        <h1 id="game-title">A Sangue Frio</h1>
+        <h1 id="game-title" data-split>A Sangue Frio</h1>
         <p class="page-hero__tag">"In cold blood."</p>
         <div class="page-hero__actions">
           <a class="btn btn--primary" href="/press/" data-magnetic><span class="btn__shine"></span>Press kit</a>
           <a class="btn btn--ghost" href="/games/corazon-negro/" data-magnetic><span class="btn__shine"></span>Also: Corazón Negro</a>
         </div>
       </div>
+      <div class="range" aria-hidden="true" data-range>
+        <div class="range__holes" data-holes></div>
+        <div class="range__sight" data-sight></div>
+        <p class="range__hint">Click to fire · hold right-click for Sangue Frio</p>
+        <p class="range__ammo"><span data-ammo>6</span> / 6</p>
+      </div>
     </section>
 
-    <section class="section" aria-label="About the game">
+    <section class="gallery" aria-label="Screenshots" data-ghost="Morro">
+      <div class="gallery__track" data-hscroll>
+        <figure class="gallery__shot">
+          <img src="/assets/img/games/sf-alley-1.jpg" alt="O Beco: the alley, with crates for cover and enemies down the far end" width="1280" height="720" loading="lazy">
+          <figcaption><span>01</span> O Beco · the alley</figcaption>
+        </figure>
+        <figure class="gallery__shot">
+          <img src="/assets/img/sangue-frio.jpg" alt="Down the sights of a pistol at sunset, with gunmen moving between crates" width="1280" height="720" loading="lazy">
+          <figcaption><span>02</span> Cover to cover</figcaption>
+        </figure>
+        <figure class="gallery__shot">
+          <img src="/assets/img/games/sf-alley-2.jpg" alt="Targets marked in gold during Sangue Frio slow motion" width="1280" height="720" loading="lazy">
+          <figcaption><span>03</span> Sangue Frio · mark them all</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" aria-label="About the game" data-ghost="Sangue">
       <div class="page-grid">
         <div class="page-grid__main">
           <h2 data-reveal>Climb the Morro, cover to cover</h2>

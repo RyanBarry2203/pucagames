@@ -21,12 +21,15 @@ export function initScenes() {
     return;
   }
 
-  for (const [id, word] of Object.entries(GHOSTS)) {
-    const section = document.getElementById(id);
+  // home page sections by id, plus any section that names its own word with data-ghost (the game pages)
+  const ghostSections = Object.entries(GHOSTS)
+    .map(([id, word]) => [document.getElementById(id), word])
+    .concat([...document.querySelectorAll("[data-ghost]")].map((section) => [section, section.dataset.ghost]));
+  for (const [section, word] of ghostSections) {
     if (!section) {
       continue;
     }
-    const host = section.querySelector(".shift__sticky") || section;
+    const host = section.querySelector(".shift__sticky, .pages__sticky") || section;
     const ghost = document.createElement("span");
     ghost.className = "ghost";
     ghost.setAttribute("aria-hidden", "true");

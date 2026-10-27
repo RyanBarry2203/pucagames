@@ -2419,6 +2419,484 @@ main h2 {
   cursor: pointer;
 }
 
+/* ---------- Page transitions: browsers that support cross-page View Transitions cross-fade between pages ---------- */
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: page-out .45s cubic-bezier(.7, 0, .84, 0) both;
+}
+
+::view-transition-new(root) {
+  animation: page-in .8s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: scale(.96);
+    filter: blur(6px);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: blur(8px);
+  }
+}
+
+[data-motion="reduced"]::view-transition-old(root),
+[data-motion="reduced"]::view-transition-new(root) {
+  animation: none;
+}
+
+.is-warping .gallery__shot img,
+.is-warping .pages__page img,
+.is-warping .page-hero__bg {
+  filter: url(#warp);
+}
+
+/* ---------- A Sangue Frio: the hero is a shooting range (games/sangueFrio.js) ---------- */
+
+.page-hero.is-range {
+  cursor: crosshair;
+}
+
+.range {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.range__holes {
+  position: absolute;
+  inset: 0;
+}
+
+.range__sight {
+  --kick: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 58px;
+  height: 58px;
+  margin: -29px 0 0 -29px;
+  opacity: 0;
+  border: 2px solid rgba(240, 223, 168, .9);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(208, 116, 47, .6), inset 0 0 8px rgba(208, 116, 47, .4);
+  transform: translate(var(--x, -100px), var(--y, -100px)) scale(calc(1 + var(--kick) * .45)) rotate(calc(var(--kick) * 14deg));
+  transition: opacity .2s;
+}
+
+/* four ticks and a red centre dot */
+.range__sight::before,
+.range__sight::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  background:
+    linear-gradient(var(--gold-bright), var(--gold-bright)) center top / 2px 12px no-repeat,
+    linear-gradient(var(--gold-bright), var(--gold-bright)) center bottom / 2px 12px no-repeat,
+    linear-gradient(var(--gold-bright), var(--gold-bright)) left center / 12px 2px no-repeat,
+    linear-gradient(var(--gold-bright), var(--gold-bright)) right center / 12px 2px no-repeat;
+}
+
+.range__sight::after {
+  inset: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px;
+  border-radius: 50%;
+  background: #e03a1e;
+  box-shadow: 0 0 8px #e03a1e;
+}
+
+.range.is-aiming .range__sight {
+  opacity: 1;
+}
+
+.range.is-aiming.is-over-ui .range__sight {
+  opacity: 0;
+}
+
+.has-cursor body:has(.range.is-aiming:not(.is-over-ui)) .cursor {
+  opacity: 0;
+}
+
+.page-hero.is-range:has(.range.is-aiming:not(.is-over-ui)) {
+  cursor: none;
+}
+
+.range__flash {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  margin: -70px 0 0 -70px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, rgba(255, 214, 120, .9) 18%, rgba(208, 116, 47, .5) 40%, transparent 70%);
+  mix-blend-mode: screen;
+  animation: flash .12s ease-out forwards;
+}
+
+@keyframes flash {
+  from {
+    transform: scale(.4);
+  }
+
+  to {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+.range__hole {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #050403 0 22%, #2a2016 32%, transparent 34%),
+    conic-gradient(from 10deg, transparent 0 8%, rgba(240, 223, 168, .5) 9% 10%, transparent 11% 33%,
+      rgba(240, 223, 168, .45) 34% 35%, transparent 36% 61%, rgba(240, 223, 168, .5) 62% 63%, transparent 64%);
+  box-shadow: 0 0 10px rgba(208, 116, 47, .9);
+  animation: ember 1.2s ease-out forwards;
+  transition: opacity 1.4s;
+}
+
+.range__hole.is-fading {
+  opacity: 0;
+}
+
+@keyframes ember {
+  to {
+    box-shadow: 0 0 2px rgba(208, 116, 47, 0);
+  }
+}
+
+.range__mark {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  font-family: var(--font-display);
+  font-size: .9rem;
+  color: #fff;
+  border: 2px solid #e03a1e;
+  border-radius: 50%;
+  box-shadow: 0 0 14px rgba(224, 58, 30, .8);
+  animation: mark-in .25s var(--ease-out);
+}
+
+@keyframes mark-in {
+  from {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.range__hint,
+.range__ammo {
+  position: absolute;
+  right: var(--gutter);
+  margin: 0;
+  font-family: var(--font-display);
+  letter-spacing: .08em;
+  color: var(--gold-bright);
+  text-shadow: 0 2px 10px #000;
+}
+
+.range__hint {
+  bottom: 74px;
+  font-size: .85rem;
+  opacity: .75;
+}
+
+.range__ammo {
+  bottom: 28px;
+  font-size: 1.6rem;
+}
+
+.range.is-reloading .range__ammo {
+  animation: pulse .3s ease-in-out infinite;
+}
+
+/* Sangue Frio: time slows, the colour drains, the screen narrows */
+.page-hero.is-sangue-frio .page-hero__bg {
+  filter: sepia(1) saturate(.7) contrast(1.15) brightness(.9);
+  transform: scale(1.04);
+  transition: filter .4s, transform 2s var(--ease-out);
+}
+
+.page-hero.is-sangue-frio .range::before {
+  content: "Sangue Frio";
+  position: absolute;
+  top: calc(var(--header-h) + 18px);
+  left: 50%;
+  translate: -50% 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1rem + 1.6vw, 2.4rem);
+  letter-spacing: .2em;
+  color: #e03a1e;
+  text-shadow: 0 0 20px rgba(224, 58, 30, .7);
+}
+
+.page-hero.is-sangue-frio .range::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 16vmax rgba(60, 20, 8, .85);
+}
+
+/* ---------- Screenshot gallery (horizontal on wide screens) ---------- */
+
+.gallery {
+  position: relative;
+  padding: clamp(60px, 8vw, 110px) var(--gutter);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.gallery__track {
+  display: grid;
+  gap: 28px;
+}
+
+.gallery.is-horizontal {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  height: 100svh;
+  padding: calc(var(--header-h) + 10px) 0 30px;
+}
+
+.gallery.is-horizontal .gallery__track {
+  display: flex;
+  gap: clamp(32px, 4vw, 64px);
+  width: max-content;
+  padding: 0 10vw;
+}
+
+.gallery__shot {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--gold-dim);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .55), inset 0 0 0 6px var(--bg), inset 0 0 0 7px rgba(205, 181, 126, .3);
+}
+
+.gallery.is-horizontal .gallery__shot {
+  flex: none;
+  width: min(68vw, 1080px);
+}
+
+.gallery__shot img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+/* comic-book halftone dots, a nod to the game's ink-and-paint look */
+.gallery__shot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(0, 0, 0, .32) 1px, transparent 1.7px) 0 0 / 6px 6px;
+  mix-blend-mode: multiply;
+}
+
+.gallery__shot figcaption {
+  position: absolute;
+  left: 20px;
+  bottom: 16px;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, .9rem + .8vw, 1.7rem);
+  color: var(--gold-bright);
+  text-shadow: 0 2px 14px #000;
+}
+
+.gallery__shot figcaption span {
+  margin-right: .6em;
+  color: #e03a1e;
+}
+
+/* ---------- Corazón Negro: lantern, eclipse, story pages, La Novia (games/corazonNegro.js) ---------- */
+
+.page-hero.is-dark {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.page-hero.is-dark .page-hero__content {
+  z-index: 2;
+}
+
+.lantern,
+.eclipse {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.lantern {
+  display: none;
+  background:
+    radial-gradient(circle calc(var(--lr, 1) * 16vmax) at var(--lx, 50%) var(--ly, 40%),
+      rgba(255, 170, 90, .1) 0%, rgba(3, 5, 4, .3) 45%, rgba(3, 5, 4, .95) 100%);
+}
+
+.page-hero.is-dark .lantern {
+  display: block;
+}
+
+.heartbeat {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(120, 6, 6, .55) 100%);
+  opacity: 0;
+  animation: heartbeat 1.4s infinite;
+}
+
+@keyframes heartbeat {
+  0%,
+  45%,
+  100% {
+    opacity: 0;
+  }
+
+  7% {
+    opacity: .5;
+  }
+
+  15% {
+    opacity: .1;
+  }
+
+  26% {
+    opacity: .38;
+  }
+}
+
+.pages__page {
+  position: relative;
+  margin: 0 0 4px;
+  overflow: hidden;
+}
+
+.pages__page img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pages__page figcaption {
+  padding: 18px var(--gutter) 28px;
+  font-style: italic;
+  font-size: clamp(1.05rem, .9rem + .7vw, 1.6rem);
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.pages__page figcaption span {
+  display: block;
+  margin-bottom: .4em;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: .8em;
+  letter-spacing: .15em;
+  color: #c9442c;
+}
+
+.pages.is-pinned .pages__sticky {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.pages.is-pinned .pages__page {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
+
+.pages.is-pinned .pages__page:not(:first-child) {
+  opacity: 0;
+}
+
+.pages.is-pinned .pages__page img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.pages.is-pinned .pages__page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(5, 7, 6, .92) 0%, transparent 45%);
+}
+
+.pages.is-pinned .pages__page figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  max-width: 760px;
+  padding: 0 var(--gutter) clamp(36px, 7vh, 80px);
+  text-shadow: 0 2px 14px #000;
+}
+
+.novia {
+  position: fixed;
+  right: 3vw;
+  bottom: 0;
+  z-index: 41;
+  width: auto;
+  height: 46vh;
+  pointer-events: none;
+  opacity: var(--n-o, .2);
+  transform: translateX(var(--n-x, 0)) scale(var(--n-scale, .55));
+  transform-origin: bottom right;
+  filter: blur(.6px) drop-shadow(0 0 18px rgba(200, 230, 210, .35));
+}
+
+.novia.is-seen {
+  animation: novia-gone .9s steps(6) forwards;
+}
+
+@keyframes novia-gone {
+  30% {
+    opacity: .9;
+    transform: translateX(var(--n-x, 0)) scale(calc(var(--n-scale, .55) * 1.08)) skewX(6deg);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(var(--n-x, 0)) scale(var(--n-scale, .55));
+  }
+}
+
+[data-motion="reduced"] .novia,
+[data-motion="reduced"] .heartbeat {
+  display: none;
+}
+
 /* ---------- Headings rise word by word ---------- */
 
 .rise-word {
