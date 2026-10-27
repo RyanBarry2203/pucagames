@@ -9,13 +9,13 @@ export function initReveal() {
         observer.unobserve(entry.target);
       }
     }
-  }, { rootMargin: "0px 0px -12% 0px" });
+  }, { rootMargin: "0px 0px 5% 0px" });
 
   for (const element of elements) {
     const siblings = [...element.parentElement.children].filter((child) => child.hasAttribute("data-reveal"));
-    const index = siblings.indexOf(element);
+    const index = Math.min(siblings.indexOf(element), 4);
     if (index > 0) {
-      element.style.setProperty("--delay", `${index * 0.12}s`);
+      element.style.setProperty("--delay", `${index * 0.1}s`);
     }
     observer.observe(element);
   }
