@@ -79,7 +79,7 @@ void main() {
 export async function initWorld() {
   const hero = document.querySelector("[data-scene]");
   const canvas = hero?.querySelector("[data-world]");
-  if (!canvas || reducedMotion) {
+  if (!canvas) {
     return;
   }
 
@@ -243,11 +243,23 @@ export async function initWorld() {
       mist.mesh.position.y = -h + mist.y * 2 * h;
     }
   }
-  layout();
-  new ResizeObserver(layout).observe(canvas);
-
   hero.classList.add("has-world");
   world.active = true;
+
+  // gentle mode: the same scene, but as one still frame (redrawn only when the window changes size)
+  if (reducedMotion) {
+    camera.lookAt(0, 0, CAMERA_Z - 60);
+    const still = () => {
+      layout();
+      composer.render();
+    };
+    still();
+    new ResizeObserver(still).observe(canvas);
+    return;
+  }
+
+  layout();
+  new ResizeObserver(layout).observe(canvas);
   const visibility = watchVisibility(hero, "0px");
   let lookX = 0;
   let lookY = 0;
