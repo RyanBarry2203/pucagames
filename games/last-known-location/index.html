@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Last Known Location · Púca Games</title>
+  <meta name="description" content="Last Known Location is our first-person horror demo for the Arkade Gaming Gun: a farmhouse in the Irish midlands, a torch clamped under the barrel, and ten minutes in the dark. Her phone was last seen here.">
+  <meta name="theme-color" content="#0b110f">
+  <link rel="canonical" href="https://pucagames.com/games/last-known-location/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Púca Games">
+  <meta property="og:title" content="Last Known Location · Púca Games">
+  <meta property="og:description" content="Our first-person horror demo for the Arkade Gaming Gun. Her phone was last seen here.">
+  <meta property="og:url" content="https://pucagames.com/games/last-known-location/">
+  <meta property="og:image" content="https://pucagames.com/assets/img/press/last-known-location-screenshot.jpg">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="1080">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
+  <link rel="apple-touch-icon" href="/assets/img/icon-180.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var stored = null;
+      try { stored = localStorage.getItem("motion"); } catch (e) {}
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      root.classList.add("js");
+      root.dataset.motion = stored === "full" || stored === "reduced" ? stored : reduce ? "reduced" : "full";
+    })();
+  </script>
+  <script src="/assets/vendor/gsap.min.js" defer></script>
+  <script src="/assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="/assets/vendor/DrawSVGPlugin.min.js" defer></script>
+  <script src="/assets/vendor/MotionPathPlugin.min.js" defer></script>
+  <script src="/assets/vendor/lenis.min.js" defer></script>
+  <script type="module" src="/assets/js/page.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Last Known Location",
+    "url": "https://pucagames.com/games/last-known-location/",
+    "genre": "First-person horror",
+    "gamePlatform": "Arkade Gaming Gun (PC)",
+    "image": "https://pucagames.com/assets/img/press/last-known-location-screenshot.jpg",
+    "author": { "@type": "Organization", "name": "Púca Games", "url": "https://pucagames.com/" }
+  }
+  </script>
+</head>
+<body data-game="last-known-location">
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <filter id="warp" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.006 0.035" numOctaves="2" seed="7" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" data-warp />
+    </filter>
+  </svg>
+  <canvas class="fx" aria-hidden="true" data-fx></canvas>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="cursor" aria-hidden="true" data-cursor>
+    <span class="cursor__ring"></span>
+    <span class="cursor__dot"></span>
+  </div>
+
+  <header class="site-header is-scrolled" data-header>
+    <div class="site-header__progress" data-progress></div>
+    <nav class="nav" aria-label="Main">
+      <ul class="nav__list nav__list--left">
+        <li><a href="/#games">Games</a></li>
+        <li><a href="/games/a-sangue-frio/">A Sangue Frio</a></li>
+        <li><a href="/games/last-known-location/" aria-current="page">Last Known Location</a></li>
+      </ul>
+      <a class="nav__brand" href="/" aria-label="Púca Games, home" data-magnetic>
+        <img src="/assets/img/logo.png" alt="" width="409" height="370">
+      </a>
+      <ul class="nav__list nav__list--right">
+        <li><a href="/press/">Press</a></li>
+        <li><a href="/#news">News</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" data-nav-toggle>
+        <span class="nav__toggle-bar"></span>
+        <span class="visually-hidden">Menu</span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu" hidden data-mobile-menu>
+      <ul>
+        <li><a href="/#games">Games</a></li>
+        <li><a href="/games/a-sangue-frio/">A Sangue Frio</a></li>
+        <li><a href="/games/last-known-location/" aria-current="page">Last Known Location</a></li>
+        <li><a href="/games/corazon-negro/">Corazón Negro</a></li>
+        <li><a href="/press/">Press</a></li>
+        <li><a href="/#news">News</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main" class="page">
+    <section class="page-hero" aria-labelledby="game-title">
+      <img class="page-hero__bg" src="/assets/img/press/last-known-location-screenshot.jpg" alt="A torch beam down a dark farmhouse hallway, a grandfather clock and a framed photograph at the far end" width="1920" height="1080">
+      <div class="page-hero__content">
+        <p class="eyebrow">First-person horror · A farmhouse in the Irish midlands</p>
+        <h1 id="game-title" data-split>Last Known Location</h1>
+        <p class="page-hero__tag">"Her phone was last seen here."</p>
+        <div class="page-hero__actions">
+          <a class="btn btn--primary" href="/press/" data-magnetic><span class="btn__shine"></span>Press kit</a>
+          <a class="btn btn--ghost" href="/games/a-sangue-frio/" data-magnetic><span class="btn__shine"></span>Also: A Sangue Frio</a>
+        </div>
+      </div>
+      <div class="torch" aria-hidden="true" data-torch></div>
+    </section>
+
+    <section class="gallery" aria-label="Screenshots" data-ghost="Cara">
+      <div class="gallery__track" data-hscroll>
+        <figure class="gallery__shot">
+          <img src="/assets/img/games/lkl-hall.jpg" alt="The front door stands open on a black hallway; one red lamp burns at the far end" width="1280" height="720" loading="lazy">
+          <figcaption><span>01</span> The front door</figcaption>
+        </figure>
+        <figure class="gallery__shot">
+          <img src="/assets/img/games/lkl-study.jpg" alt="The torch beam on a wooden door in the study, everything else black" width="1280" height="720" loading="lazy">
+          <figcaption><span>02</span> The study</figcaption>
+        </figure>
+        <figure class="gallery__shot">
+          <img src="/assets/img/games/lkl-darkroom.jpg" alt="Photographs pegged on a line in a darkroom, lit by the torch" width="1280" height="720" loading="lazy">
+          <figcaption><span>03</span> The darkroom</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" aria-label="About the game" data-ghost="Last">
+      <div class="page-grid">
+        <div class="page-grid__main">
+          <h2 data-reveal>Ten minutes in the dark</h2>
+          <p data-reveal>Cara's phone pinged one last time from a farmhouse at the edge of the bog, and then it stopped. You go
+            in after her with a pistol and a torch clamped under the barrel. The torch is the only light in the house.
+            Where the gun points is where you can see, and nowhere else.</p>
+          <p data-reveal>It's a short, linear demo: the porch, the hall, the kitchen, the study, the parlour, the stairs,
+            and the darkroom at the end. About ten minutes, start to finish, and it will finish. Headphones on.</p>
+
+          <h2 data-reveal>Light reveals, light burns</h2>
+          <p data-reveal>The beam is the gun's. Flood it wide to find your way, or focus it tight to see further down the
+            hall. Batteries run down and you'll find a few spares, but never enough to feel safe. Doors are locked
+            with padlocks, chains and hasps. You don't find keys. You shoot the locks off.</p>
+
+          <h2 data-reveal>He's only there when you look</h2>
+          <p data-reveal>Nothing in this house roams. Every encounter is staged for the beam: the shape at the end of the
+            hall that goes when the torch flickers, the one that sprints at your face, the noise behind you, and the
+            thing that's an inch away when you turn back round. Silence does as much work as sound. Every sound has a
+            place and a reason.</p>
+
+          <ul class="tick-list" data-reveal>
+            <li><strong>Six scares</strong>, each one built around the light and your own turn of the head.</li>
+            <li><strong>Four locks</strong> between the porch and the darkroom. The gun opens the way.</li>
+            <li><strong>The darkroom</strong>: her camera, photograph 47, and the flash. We'll say no more.</li>
+          </ul>
+
+          <h2 data-reveal>Made for the gun</h2>
+          <p data-reveal>With the mouse you look and click. With the Arkade Gaming Gun you point the real thing at the
+            screen, and the torch under its barrel follows. Steadying the gun narrows the beam; the trigger fires; the side
+            button raises Cara's phone. The pause menu and the title screen are worked with the gun too.</p>
+
+          <h2 data-reveal>Tell us what you think</h2>
+          <p data-reveal>Last Known Location is the quiet one of our two games for the gun. If you play it, tell us where
+            it got you, and where it didn't. We can take it.</p>
+
+          <div class="page-cta" data-reveal>
+            <a class="btn btn--primary" href="mailto:developmentteam@pucagames.com" data-magnetic><span class="btn__shine"></span>Get in touch</a>
+            <a class="btn btn--ghost" href="/press/" data-magnetic><span class="btn__shine"></span>Press kit</a>
+          </div>
+        </div>
+
+        <aside class="frame fact-sheet" data-reveal aria-labelledby="facts-title">
+          <svg class="frame__corner frame__corner--tl"><use href="/assets/img/sprite.svg#corner" /></svg>
+          <svg class="frame__corner frame__corner--tr"><use href="/assets/img/sprite.svg#corner" /></svg>
+          <svg class="frame__corner frame__corner--bl"><use href="/assets/img/sprite.svg#corner" /></svg>
+          <svg class="frame__corner frame__corner--br"><use href="/assets/img/sprite.svg#corner" /></svg>
+          <h2 id="facts-title">At a glance</h2>
+          <dl>
+            <div><dt>Genre</dt><dd>First-person horror</dd></div>
+            <div><dt>Platform</dt><dd>PC · Arkade Gaming Gun</dd></div>
+            <div><dt>Setting</dt><dd>A farmhouse in the Irish midlands, 2:47 am</dd></div>
+            <div><dt>Run</dt><dd>About ten minutes, porch to darkroom</dd></div>
+            <div><dt>Status</dt><dd>Playable demo</dd></div>
+            <div><dt>Headphones</dt><dd>Strongly recommended</dd></div>
+            <div><dt>Developer</dt><dd>Púca Games, Sligo, Ireland</dd></div>
+            <div><dt>Contact</dt><dd><a href="mailto:developmentteam@pucagames.com">developmentteam@<wbr>pucagames.com</a></dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="knot-band" aria-hidden="true"></div>
+    <div class="site-footer__inner">
+      <p class="site-footer__name">Púca Games</p>
+      <p>Made by firelight in Sligo, Ireland.</p>
+      <ul class="site-footer__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/games/a-sangue-frio/">A Sangue Frio</a></li>
+        <li><a href="/games/last-known-location/">Last Known Location</a></li>
+        <li><a href="/games/corazon-negro/">Corazón Negro</a></li>
+        <li><a href="/press/">Press kit</a></li>
+      </ul>
+      <p class="site-footer__legal">© <span data-year>2026</span> Púca Games. All rights reserved.</p>
+      <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="true">Animations: <span data-motion-label>on</span></button>
+    </div>
+  </footer>
+</body>
+</html>

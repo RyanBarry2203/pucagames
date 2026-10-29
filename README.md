@@ -41,7 +41,7 @@ won't work).
 
 | Path | What |
 |---|---|
-| `games/a-sangue-frio/`, `games/corazon-negro/` | one page per game (shared header/footer markup is copied into each page; styles are the "Inner pages" block at the end of `style.css`) |
+| `games/a-sangue-frio/`, `games/last-known-location/`, `games/corazon-negro/` | one page per game (shared header/footer markup is copied into each page; styles are the "Inner pages" block at the end of `style.css`) |
 | `press/` | press kit: fact sheet, descriptions, downloads, contact |
 | `flyer/` | printable A5 booth flyer (not in the sitemap, `noindex`); print at A5, margins none, background graphics on |
 | `assets/js/page.js` | entry point for inner pages (same modules as `main.js` minus the hero scene) |

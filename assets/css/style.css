@@ -3236,3 +3236,31 @@ main h2 {
   margin: 1.2em 0 0;
   font-family: var(--font-display);
 }
+
+/* ---------- Last Known Location: the hero is lit by one torch (games/lastKnownLocation.js) ---------- */
+
+.torch {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle calc(var(--tr, 1) * 24vmax) at var(--tx, 50%) var(--ty, 45%),
+      rgba(236, 228, 206, .08) 0%, rgba(236, 228, 206, .02) 22%, rgba(4, 5, 5, .55) 48%, rgba(4, 5, 5, .97) 100%);
+}
+
+.page-hero.is-torch .torch {
+  display: block;
+}
+
+.page-hero.is-torch .page-hero__bg {
+  filter: saturate(.75) contrast(1.08);
+  transform: scale(1.03);
+}
+
+.page-hero.is-torch::after {
+  background: linear-gradient(to top, var(--bg) 2%, rgba(11, 17, 15, .6) 30%, rgba(11, 17, 15, 0));
+}

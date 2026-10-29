@@ -14,12 +14,14 @@ import { initVelocity } from "./modules/velocity.js";
 import { initMotionToggle } from "./modules/motionToggle.js";
 import { initSangueFrio } from "./games/sangueFrio.js";
 import { initCorazonNegro } from "./games/corazonNegro.js";
+import { initLastKnownLocation } from "./games/lastKnownLocation.js";
 
 // Entry point for the inner pages (games, press): the same motion engine as the home page, plus each game's own
 // signature interaction, chosen by <body data-game>.
 const GAMES = {
   "sangue-frio": initSangueFrio,
   "corazon-negro": initCorazonNegro,
+  "last-known-location": initLastKnownLocation,
 };
 
 // the press page loads this file without the GSAP scripts, so only start the scroll engine where it exists
