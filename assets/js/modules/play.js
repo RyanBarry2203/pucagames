@@ -3,6 +3,8 @@
 // whenever the player scrolls it away or switches tab, and the game's own QUIT brings the cover back.
 // A Sangue Frio's library card for the other game asks this page to take the visitor there.
 
+import { setPaused } from "../core/ticker.js";
+
 const VISIBLE_RATIO = 0.3;
 
 export function initPlay() {
@@ -29,7 +31,10 @@ function setUpPlayer(player) {
     if (!frame || document.fullscreenElement === screen) {
       return;
     }
-    send(visibleRatio >= VISIBLE_RATIO && !document.hidden ? "puca:resume" : "puca:pause");
+    const active = visibleRatio >= VISIBLE_RATIO && !document.hidden;
+    send(active ? "puca:resume" : "puca:pause");
+    // the game shares this page's main thread: the page's own effects hold still while it is on screen
+    setPaused(active);
   };
 
   const play = () => {
@@ -39,6 +44,7 @@ function setUpPlayer(player) {
     frame.allow = "fullscreen; autoplay; gamepad";
     frame.allowFullscreen = true;
     screen.replaceChildren(frame);
+    setPaused(true);
     frame.focus();
     player.classList.add("is-playing");
     stop.hidden = false;
@@ -51,6 +57,7 @@ function setUpPlayer(player) {
       document.exitFullscreen();
     }
     frame = null;
+    setPaused(false);
     screen.replaceChildren(cover);
     player.classList.remove("is-playing");
     stop.hidden = true;

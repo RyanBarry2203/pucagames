@@ -57,18 +57,27 @@ function onResize() {
   state.vh = window.innerHeight;
 }
 
+let paused = false;
+
+function resume() {
+  cancelAnimationFrame(frameId);
+  if (!document.hidden && !paused) {
+    lastTime = performance.now();
+    frameId = requestAnimationFrame(tick);
+  }
+}
+
+// A game playing in-page (modules/play.js) runs on this page's main thread, so every effect holds still until it stops.
+export function setPaused(value) {
+  paused = value;
+  resume();
+}
+
 export function start() {
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   window.addEventListener("resize", onResize);
-  document.addEventListener("visibilitychange", () => {
-    cancelAnimationFrame(frameId);
-    if (!document.hidden) {
-      lastTime = performance.now();
-      frameId = requestAnimationFrame(tick);
-    }
-  });
-  lastTime = performance.now();
-  frameId = requestAnimationFrame(tick);
+  document.addEventListener("visibilitychange", resume);
+  resume();
 }
 
 // True while the element is within (or near) the viewport; lets modules skip work for things off screen.
