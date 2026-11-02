@@ -12,6 +12,7 @@ import { initParallax } from "./modules/parallax.js";
 import { initScenes } from "./modules/scenes.js";
 import { initVelocity } from "./modules/velocity.js";
 import { initMotionToggle } from "./modules/motionToggle.js";
+import { initPlay } from "./modules/play.js";
 import { initSangueFrio } from "./games/sangueFrio.js";
 import { initCorazonNegro } from "./games/corazonNegro.js";
 import { initLastKnownLocation } from "./games/lastKnownLocation.js";
@@ -39,6 +40,7 @@ initTilt();
 initFx();
 initVelocity();
 initMotionToggle();
+initPlay();
 
 if (hasEngine) {
   GAMES[document.body.dataset.game]?.();

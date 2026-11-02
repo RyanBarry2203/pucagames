@@ -3264,3 +3264,243 @@ main h2 {
 .page-hero.is-torch::after {
   background: linear-gradient(to top, var(--bg) 2%, rgba(11, 17, 15, .6) 30%, rgba(11, 17, 15, 0));
 }
+
+/* ---------- Play in the browser (modules/play.js): a framed screen, a painted cover, then the game's frame ---------- */
+
+.play {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(72px, 10vw, 128px) var(--gutter) 0;
+}
+
+.play__head {
+  max-width: 680px;
+  margin: 0 auto clamp(28px, 4vw, 44px);
+  text-align: center;
+}
+
+.play__head h2 {
+  font-size: clamp(1.8rem, 1.3rem + 2vw, 2.8rem);
+}
+
+.play__head p:last-child {
+  color: var(--muted);
+}
+
+.play__frame {
+  height: auto;
+  padding: clamp(10px, 1.4vw, 16px);
+}
+
+.play__screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(205, 181, 126, .28);
+}
+
+.play__screen:fullscreen {
+  border: 0;
+}
+
+.play__screen iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+}
+
+.play__cover {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.play__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.05);
+  transition: transform 1.6s var(--ease-out), filter .8s;
+}
+
+.play__cover:hover .play__art {
+  transform: scale(1.09);
+}
+
+.play__light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.play__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.8vw, 20px);
+  padding: 20px;
+  text-align: center;
+}
+
+.play__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1rem + 4.4vw, 4.6rem);
+  line-height: 1;
+  color: var(--gold-bright);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, .85);
+}
+
+.play__start {
+  min-height: 60px;
+  font-size: 1.25rem;
+  animation: play-glow 2.8s ease-in-out infinite;
+}
+
+@keyframes play-glow {
+  50% { box-shadow: inset 0 0 0 3px var(--bg), inset 0 0 0 4px rgba(240, 223, 168, .6), 0 0 44px rgba(205, 181, 126, .35); }
+}
+
+.play__note {
+  margin: 0;
+  font-size: .95rem;
+  font-style: italic;
+  color: var(--muted);
+  text-shadow: 0 2px 10px #000;
+}
+
+.play__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 18px;
+  padding: 12px 4px 2px;
+}
+
+.play__status {
+  margin: 0;
+  font-size: .95rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.play__buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.play__button {
+  min-height: 36px;
+  padding: 0 14px;
+  font: 500 .95rem/1 var(--font-body);
+  font-variant: small-caps;
+  letter-spacing: .08em;
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color .3s, border-color .3s, background-color .3s;
+}
+
+.play__button:hover,
+.play__button:focus-visible {
+  color: var(--bg);
+  background: var(--gold);
+  border-color: var(--gold);
+  outline: none;
+}
+
+.play__controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px 28px;
+  margin: clamp(22px, 3vw, 34px) 0 0;
+  font-size: 1rem;
+}
+
+.play__controls div {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.play__controls dt {
+  flex: 0 0 auto;
+  min-width: 6.5em;
+  color: var(--gold);
+  font-variant: small-caps;
+  letter-spacing: .06em;
+}
+
+.play__controls dd {
+  margin: 0;
+  color: var(--text);
+}
+
+/* the page's own cursor would sit frozen at the frame's edge while the game has the mouse */
+.has-cursor body:has(.play.is-playing .play__screen:hover) .cursor {
+  opacity: 0;
+}
+
+/* A Sangue Frio: a warm sunset grade, and a gold sight that follows the pointer across the cover */
+.play--sight .play__art {
+  filter: brightness(.55) sepia(.35) saturate(1.2);
+}
+
+.play--sight .play__light {
+  background:
+    radial-gradient(circle 5px at var(--px, 50%) var(--py, 50%), #c8402b 3px, transparent 4px),
+    radial-gradient(circle 52px at var(--px, 50%) var(--py, 50%), transparent 47px, var(--gold-bright) 48px, var(--gold) 50px, transparent 51px),
+    radial-gradient(circle 120px at var(--px, 50%) var(--py, 50%), rgba(240, 223, 168, .12), transparent 100%),
+    radial-gradient(70% 55% at 50% 110%, rgba(208, 116, 47, .35), transparent 70%),
+    radial-gradient(120% 90% at 50% 50%, transparent 35%, rgba(8, 5, 3, .9) 100%);
+  opacity: .9;
+}
+
+/* Last Known Location: the cover is black except where the pointer's torch falls, and the beam stutters now and then */
+.play--torch .play__art {
+  filter: saturate(.75) contrast(1.05) brightness(1.3);
+}
+
+.play--torch .play__light {
+  background: radial-gradient(circle 26vmax at var(--px, 50%) var(--py, 42%),
+    rgba(236, 228, 206, .05) 0%, rgba(4, 5, 5, .2) 26%, rgba(4, 5, 5, .9) 55%, rgba(4, 5, 5, .97) 80%);
+  animation: play-stutter 7s steps(1) infinite;
+}
+
+.play--torch .play__title {
+  color: #ece4ce;
+  text-shadow: 0 0 30px rgba(236, 228, 206, .2), 0 4px 30px #000;
+}
+
+@keyframes play-stutter {
+  0%, 52%, 54%, 100% { opacity: 1; }
+  53% { opacity: .78; }
+}
+
+@media (max-width: 860px) {
+  .play__screen {
+    aspect-ratio: 4 / 3;
+  }
+
+  .play__title {
+    display: none;
+  }
+}
+
+[data-motion="reduced"] .play__start,
+[data-motion="reduced"] .play--torch .play__light {
+  animation: none;
+}

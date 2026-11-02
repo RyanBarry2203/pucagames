@@ -114,8 +114,8 @@
         <h1 id="game-title" data-split>A Sangue Frio</h1>
         <p class="page-hero__tag">"In cold blood."</p>
         <div class="page-hero__actions">
-          <a class="btn btn--primary" href="/press/" data-magnetic><span class="btn__shine"></span>Press kit</a>
-          <a class="btn btn--ghost" href="/games/last-known-location/" data-magnetic><span class="btn__shine"></span>Also: Last Known Location</a>
+          <a class="btn btn--primary" href="#play" data-magnetic><span class="btn__shine"></span>Play it now</a>
+          <a class="btn btn--ghost" href="/press/" data-magnetic><span class="btn__shine"></span>Press kit</a>
         </div>
       </div>
       <div class="range" aria-hidden="true" data-range>
@@ -124,6 +124,49 @@
         <p class="range__hint">Click to fire · hold right-click for Sangue Frio</p>
         <p class="range__ammo"><span data-ammo>6</span> / 6</p>
       </div>
+    </section>
+
+    <section class="play play--sight" id="play" aria-labelledby="play-title" data-play data-play-src="/play/a-sangue-frio/" data-play-title="A Sangue Frio">
+      <div class="play__head">
+        <p class="eyebrow">play it here</p>
+        <h2 id="play-title" data-reveal>Up the hill, in your browser</h2>
+        <p data-reveal>The demo we brought to Bangkok, running right here on the page. Your mouse stands in for the gun.</p>
+      </div>
+      <div class="frame play__frame" data-reveal>
+        <svg class="frame__corner frame__corner--tl"><use href="/assets/img/sprite.svg#corner" /></svg>
+        <svg class="frame__corner frame__corner--tr"><use href="/assets/img/sprite.svg#corner" /></svg>
+        <svg class="frame__corner frame__corner--bl"><use href="/assets/img/sprite.svg#corner" /></svg>
+        <svg class="frame__corner frame__corner--br"><use href="/assets/img/sprite.svg#corner" /></svg>
+        <div class="play__screen" data-play-screen>
+          <div class="play__cover">
+            <img class="play__art" src="/assets/img/games/sf-alley-1.jpg" alt="" width="1280" height="720" loading="lazy" decoding="async">
+            <div class="play__light" aria-hidden="true"></div>
+            <div class="play__content">
+              <p class="play__title" aria-hidden="true">A Sangue Frio</p>
+              <button class="btn btn--primary play__start" type="button" data-play-start><span class="btn__shine"></span>Take aim</button>
+              <p class="play__note">About 56 MB · a desktop browser with a mouse · headphones help</p>
+            </div>
+          </div>
+        </div>
+        <div class="play__bar">
+          <p class="play__status" data-play-status>It loads only when you press play, and goes quiet if you scroll away.</p>
+          <div class="play__buttons">
+            <button class="play__button" type="button" data-play-fullscreen hidden>Full screen</button>
+            <button class="play__button" type="button" data-play-stop hidden>Stop</button>
+          </div>
+        </div>
+      </div>
+      <dl class="play__controls" aria-label="Controls" data-reveal>
+        <div><dt>Mouse</dt><dd>Aim</dd></div>
+        <div><dt>Left click</dt><dd>Fire</dd></div>
+        <div><dt>Right click</dt><dd>Focus aim (hold)</dd></div>
+        <div><dt>R</dt><dd>Reload, again in the gold for a perfect one</dd></div>
+        <div><dt>Space</dt><dd>Take cover (hold)</dd></div>
+        <div><dt>A / D</dt><dd>Shift cover</dd></div>
+        <div><dt>Q</dt><dd>Sangue Frio</dd></div>
+        <div><dt>C</dt><dd>Recenter the sight</dd></div>
+        <div><dt>Esc</dt><dd>Pause, and free the mouse</dd></div>
+      </dl>
     </section>
 
     <section class="gallery" aria-label="Screenshots" data-ghost="Morro">

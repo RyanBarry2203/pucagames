@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Play Last Known Location · Púca Games</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/icon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=EB+Garamond:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; --bg: #040505; --beam: #ece4ce; --gold-dim: #8c7b52; --text: #d9d3c2; --muted: #7d786b; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; overflow: hidden; background: var(--bg); color: var(--text); font: 500 17px/1.5 "EB Garamond", Georgia, serif; }
+    canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; background: #000; touch-action: none; }
+
+    .loader {
+      position: fixed; inset: 0; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px;
+      text-align: center; background: var(--bg); transition: opacity 1.2s;
+    }
+    .loader.is-done { opacity: 0; pointer-events: none; }
+    /* the only light on the screen is a torch beam that drifts, and stutters now and then */
+    .loader::before {
+      content: ""; position: absolute; inset: -20%;
+      background: radial-gradient(circle 22vmax at 50% 50%, rgba(236, 228, 206, .1), rgba(236, 228, 206, .025) 40%, transparent 70%);
+      animation: drift 9s ease-in-out infinite alternate, stutter 7s steps(1) infinite;
+      pointer-events: none;
+    }
+    @keyframes drift { from { transform: translate(-9%, 4%); } to { transform: translate(9%, -5%); } }
+    @keyframes stutter { 0%, 61%, 63%, 100% { opacity: 1; } 62% { opacity: .3; } }
+    .loader > * { position: relative; }
+    .loader__eyebrow { margin: 0; font: 400 .85rem/1 "Uncial Antiqua", Georgia, serif; letter-spacing: .14em; text-transform: lowercase; color: var(--muted); }
+    .loader__title { margin: 0; font: 400 clamp(2rem, 6.4vw, 4rem)/1.05 "Uncial Antiqua", Georgia, serif; color: var(--beam); text-shadow: 0 0 28px rgba(236, 228, 206, .18); }
+    .loader__tag { margin: -2px 0 6px; font-style: italic; color: var(--muted); }
+    .loader__bar { position: relative; width: min(300px, 66vw); height: 2px; background: rgba(236, 228, 206, .1); overflow: hidden; }
+    .loader__fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--beam); box-shadow: 0 0 10px rgba(236, 228, 206, .6); transition: width .25s; }
+    .loader__status { margin: 0; font-variant: small-caps; letter-spacing: .08em; color: var(--muted); }
+    .loader__note { margin: 4px 0 0; font-style: italic; font-size: .95rem; color: var(--muted); }
+    .loader__error { display: none; max-width: 46ch; margin: 0; color: #d98a72; }
+    .loader.is-error .loader__error { display: block; }
+    .loader.is-error .loader__bar { display: none; }
+    .back { position: fixed; top: 14px; left: 16px; z-index: 3; font-variant: small-caps; letter-spacing: .08em; color: var(--muted); text-decoration: none; }
+    .back:hover, .back:focus-visible { color: var(--beam); }
+    .embedded .back { display: none; }
+    @media (prefers-reduced-motion: reduce) { .loader::before { animation: none; } .loader { transition: none; } }
+  </style>
+</head>
+<body>
+  <a class="back" href="/games/last-known-location/">&larr; Last Known Location</a>
+  <canvas id="unity-canvas" tabindex="-1" aria-label="Last Known Location, the game"></canvas>
+
+  <div class="loader" role="status" aria-live="polite">
+    <p class="loader__eyebrow">first-person horror · the irish midlands</p>
+    <p class="loader__title">Last Known Location</p>
+    <p class="loader__tag">"Her phone was last seen here."</p>
+    <div class="loader__bar"><div class="loader__fill"></div></div>
+    <p class="loader__status">Loading</p>
+    <p class="loader__note">Headphones on.</p>
+    <p class="loader__error"></p>
+  </div>
+
+  <script src="/play/player.js" data-build="LastKnownLocation" data-parts="2" data-title="Last Known Location" data-home="/games/last-known-location/"
+    data-progress="Finding the farmhouse|Checking the torch|On the porch|The door is open"></script>
+</body>
+</html>

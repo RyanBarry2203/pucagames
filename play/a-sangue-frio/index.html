@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Play A Sangue Frio · Púca Games</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/icon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=EB+Garamond:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; --bg: #0b0806; --gold: #cdb57e; --gold-bright: #f0dfa8; --gold-dim: #8c7b52; --blood: #9e2a1c; --text: #e6dcc4; --muted: #a3927a; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; overflow: hidden; background: var(--bg); color: var(--text); font: 500 17px/1.5 "EB Garamond", Georgia, serif; }
+    canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; background: #000; touch-action: none; }
+
+    .loader {
+      position: fixed; inset: 0; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px;
+      text-align: center;
+      background:
+        radial-gradient(60% 50% at 50% 115%, rgba(208, 116, 47, .38), transparent 70%),
+        radial-gradient(90% 70% at 50% 50%, transparent 40%, rgba(0, 0, 0, .85) 100%),
+        linear-gradient(180deg, #120c08, #1c120b 60%, #2a170c);
+      transition: opacity .7s;
+    }
+    .loader.is-done { opacity: 0; pointer-events: none; }
+    .sight { position: relative; width: 74px; height: 74px; margin-bottom: 6px; border: 1px solid var(--gold); border-radius: 50%; box-shadow: 0 0 18px rgba(205, 181, 126, .35); animation: sweep 3.2s ease-in-out infinite; }
+    .sight::before, .sight::after { content: ""; position: absolute; background: var(--gold); }
+    .sight::before { left: 50%; top: -10px; bottom: -10px; width: 1px; }
+    .sight::after { top: 50%; left: -10px; right: -10px; height: 1px; }
+    .sight i { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: var(--blood); box-shadow: 0 0 10px var(--blood); }
+    @keyframes sweep { 50% { transform: translate(14px, -6px) rotate(8deg); } }
+    .loader__eyebrow { margin: 0; font: 400 .85rem/1 "Uncial Antiqua", Georgia, serif; letter-spacing: .14em; text-transform: lowercase; color: var(--gold-dim); }
+    .loader__title { margin: 0; font: 400 clamp(2.2rem, 7vw, 4.4rem)/1 "Uncial Antiqua", Georgia, serif; color: var(--gold-bright); text-shadow: 0 4px 30px rgba(0, 0, 0, .8), 0 0 24px rgba(208, 116, 47, .35); }
+    .loader__tag { margin: -4px 0 6px; font-style: italic; color: var(--muted); }
+    .loader__bar { position: relative; width: min(320px, 70vw); height: 4px; border: 1px solid var(--gold-dim); border-radius: 2px; overflow: hidden; }
+    .loader__fill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, var(--blood), var(--gold)); transition: width .25s; }
+    .loader__status { margin: 0; font-variant: small-caps; letter-spacing: .08em; color: var(--muted); }
+    .loader__error { display: none; max-width: 46ch; margin: 0; color: #e9906d; }
+    .loader.is-error .loader__error { display: block; }
+    .loader.is-error .loader__bar, .loader.is-error .sight { display: none; }
+    .back { position: fixed; top: 14px; left: 16px; z-index: 3; font-variant: small-caps; letter-spacing: .08em; color: var(--muted); text-decoration: none; }
+    .back:hover, .back:focus-visible { color: var(--gold-bright); }
+    .embedded .back { display: none; }
+    @media (prefers-reduced-motion: reduce) { .sight { animation: none; } .loader { transition: none; } }
+  </style>
+</head>
+<body>
+  <a class="back" href="/games/a-sangue-frio/">&larr; A Sangue Frio</a>
+  <canvas id="unity-canvas" tabindex="-1" aria-label="A Sangue Frio, the game"></canvas>
+
+  <div class="loader" role="status" aria-live="polite">
+    <div class="sight" aria-hidden="true"><i></i></div>
+    <p class="loader__eyebrow">arcade rail shooter · rio de janeiro</p>
+    <p class="loader__title">A Sangue Frio</p>
+    <p class="loader__tag">"In cold blood."</p>
+    <div class="loader__bar"><div class="loader__fill"></div></div>
+    <p class="loader__status">Loading</p>
+    <p class="loader__error"></p>
+  </div>
+
+  <script src="/play/player.js" data-build="SangueFrio" data-title="A Sangue Frio" data-home="/games/a-sangue-frio/"
+    data-progress="Loading the guns|Climbing the Morro|Taking cover|Safety off"></script>
+</body>
+</html>
