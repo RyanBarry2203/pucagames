@@ -41,6 +41,16 @@
       if (root.dataset.motion === "full" && !seen) {
         root.classList.add("is-loading");
       }
+      // if the scripts never start (an old browser, a failed download), show the page as it is rather than hidden.
+      // Decided once every deferred and module script has run or failed (DOMContentLoaded waits for them), so a slow
+      // phone is never judged too early; the long timer only covers a download that stalls outright.
+      var check = function () {
+        if (!window.__pucaBooted) {
+          root.classList.remove("js", "is-loading");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () { setTimeout(check, 0); });
+      setTimeout(check, 30000);
     })();
   </script>
   <script src="assets/vendor/gsap.min.js" defer></script>
@@ -56,6 +66,8 @@
       }
     }
   </script>
+  <link rel="modulepreload" href="assets/js/modules/world.js">
+  <link rel="modulepreload" href="assets/vendor/three/three.module.min.js">
   <script type="module" src="assets/js/main.js"></script>
 
   <script type="application/ld+json">
@@ -183,7 +195,6 @@
   </div>
 
   <canvas class="fx" aria-hidden="true" data-fx></canvas>
-  <div class="runners" aria-hidden="true" data-runners data-frames="hound boar fox horse"></div>
 
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -201,7 +212,7 @@
         <li><a href="#lore">Lore</a></li>
       </ul>
       <a class="nav__brand" href="#top" aria-label="Púca Games, back to top" data-magnetic>
-        <img src="assets/img/logo.png" alt="" width="409" height="370">
+        <img src="assets/img/logo-144.png" srcset="assets/img/logo-144.png 2x, assets/img/logo-216.png 3x" alt="" width="409" height="370" fetchpriority="high">
       </a>
       <ul class="nav__list nav__list--right">
         <li><a href="#story">Story</a></li>
@@ -225,7 +236,7 @@
     </div>
   </header>
 
-  <main id="main">
+  <main id="main" data-runners data-frames="hound boar fox horse">
     <!-- Hero: a painted night scene split into depth layers for scroll and pointer parallax. -->
     <section class="hero" id="top" aria-labelledby="hero-title" data-scene>
       <div class="scene" aria-hidden="true">

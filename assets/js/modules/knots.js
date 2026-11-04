@@ -55,7 +55,9 @@ export function initKnots() {
     if (reducedMotion) {
       continue;
     }
-    gsap.timeline({ scrollTrigger: { trigger: rule, start: "top 92%", once: true } })
+    // plays once and stays put. Not `once: true`: a trigger that removes itself while ScrollTrigger is still
+    // measuring (a reload part-way down the page) breaks the measuring of every trigger after it
+    gsap.timeline({ scrollTrigger: { trigger: rule, start: "top 92%", toggleActions: "play none none none" } })
       .fromTo(svg, { clipPath: "inset(0 50% 0 50%)" }, { clipPath: "inset(0 0% 0 0%)", duration: 1.6, ease: "power3.inOut" })
       .fromTo(medallion, { scale: 0, rotate: -180 }, { scale: 1, rotate: 0, duration: 1.2, ease: "back.out(1.6)" }, 0.2);
   }

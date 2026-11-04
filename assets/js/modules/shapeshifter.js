@@ -1,11 +1,14 @@
-import { onFrame, reducedMotion, watchVisibility, clamp } from "../core/ticker.js";
+import { onFrame, onRead, reducedMotion, watchVisibility, clamp } from "../core/ticker.js";
 import { scrollToY } from "../core/engine.js";
 
 const TAU = Math.PI * 2;
+// below this height a pinned screen can't hold the stage, a member's bio and the chips together
+const COMPACT = "(max-height: 600px)";
 
 // "One spirit, three shapes". The section is several screens tall with a sticky stage inside; how far you have
 // scrolled through it decides which animal the Púca is. A change of shape undraws one animal, draws the next
 // (CSS animates --draw) and throws a burst of gold sparks.
+// On a short screen (a landscape phone) the section isn't pinned: it scrolls like any other, and the chips pick the shape.
 export function initShapeshifter() {
   const section = document.querySelector("[data-shift]");
   if (!section) {
@@ -16,6 +19,7 @@ export function initShapeshifter() {
   const chips = [...section.querySelectorAll("[data-shift-to]")];
   const sparks = createSparks(section.querySelector("[data-sparks]"));
   const visibility = watchVisibility(section, "0px");
+  const compact = window.matchMedia(COMPACT);
   let index = 0;
 
   function show(next) {
@@ -29,13 +33,30 @@ export function initShapeshifter() {
       chip.classList.toggle("is-active", i === next);
       chip.setAttribute("aria-pressed", String(i === next));
     });
+    if (compact.matches) {
+      section.style.setProperty("--p", ((next + 1) / forms.length).toFixed(4));
+    }
     if (!reducedMotion) {
       sparks.burst();
     }
   }
 
+  function setCompact() {
+    section.classList.toggle("is-compact", compact.matches);
+    if (compact.matches) {
+      section.style.setProperty("--p", ((index + 1) / forms.length).toFixed(4));
+    }
+    window.ScrollTrigger?.refresh();
+  }
+  section.classList.toggle("is-compact", compact.matches);
+  compact.addEventListener("change", setCompact);
+
   chips.forEach((chip, i) => {
     chip.addEventListener("click", () => {
+      if (compact.matches) {
+        show(i);
+        return;
+      }
       // jump to the middle of that shape's slice of the scroll
       const total = section.offsetHeight - window.innerHeight;
       const top = section.getBoundingClientRect().top + window.scrollY;
@@ -43,20 +64,29 @@ export function initShapeshifter() {
     });
   });
 
+  let top = 0;
+  let height = 0;
+  onRead(() => {
+    if (visibility.visible) {
+      top = section.getBoundingClientRect().top;
+      height = section.offsetHeight;
+    }
+  });
+
   onFrame((s, dt) => {
     if (!visibility.visible) {
       return;
     }
-    const total = section.offsetHeight - s.vh;
-    const progress = clamp(-section.getBoundingClientRect().top / total, 0, 1);
-    section.style.setProperty("--p", progress.toFixed(4));
-    show(Math.min(forms.length - 1, Math.floor(progress * forms.length)));
+    if (!compact.matches) {
+      const progress = clamp(-top / (height - s.vh), 0, 1);
+      section.style.setProperty("--p", progress.toFixed(4));
+      show(Math.min(forms.length - 1, Math.floor(progress * forms.length)));
+    }
     if (!reducedMotion) {
       sparks.update(s.time, dt);
     }
   });
 }
-
 // Gold particles on the stage canvas: a slow ring of orbiting motes, plus bursts when the Púca changes shape.
 function createSparks(canvas) {
   const ctx = canvas.getContext("2d");

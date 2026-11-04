@@ -1,4 +1,4 @@
-import { onFrame, reducedMotion, watchVisibility, clamp } from "../core/ticker.js";
+import { onFrame, onRead, reducedMotion, watchVisibility, clamp } from "../core/ticker.js";
 
 // The lore paragraph lights up word by word as it scrolls through the screen, while a huge faint triquetra turns
 // slowly behind it.
@@ -25,12 +25,17 @@ export function initLore() {
   const knot = document.querySelector(".lore__knot");
   const visibility = watchVisibility(text, "200px");
   const lit = new Array(spans.length).fill(-1);
+  let rect = null;
+  onRead(() => {
+    if (visibility.visible) {
+      rect = text.getBoundingClientRect();
+    }
+  });
 
   onFrame((s) => {
-    if (!visibility.visible) {
+    if (!visibility.visible || !rect) {
       return;
     }
-    const rect = text.getBoundingClientRect();
     // fully lit by the time the paragraph's middle reaches the upper third of the screen
     const start = s.vh * 0.9;
     const end = s.vh * 0.3 - rect.height * 0.5;

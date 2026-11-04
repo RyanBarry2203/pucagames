@@ -41,10 +41,23 @@
     .loader__error { display: none; max-width: 46ch; margin: 0; color: #d98a72; }
     .loader.is-error .loader__error { display: block; }
     .loader.is-error .loader__bar { display: none; }
+    .loader.is-unpacking .loader__fill { width: 100% !important; background: linear-gradient(90deg, transparent, var(--beam) 50%, transparent) no-repeat; background-size: 45% 100%; animation: unpack 1.5s linear infinite; }
+    @keyframes unpack { from { background-position: -80% 0; } to { background-position: 180% 0; } }
+    /* shown only if the browser turned the game's request for the mouse down: one click asks again */
+    .lock {
+      position: fixed; inset: 0; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px;
+      font: inherit; color: var(--text); text-align: center; cursor: pointer; border: 0;
+      background: radial-gradient(70% 60% at 50% 50%, rgba(4, 5, 5, .5), rgba(4, 5, 5, .85));
+    }
+    .lock[hidden] { display: none; }
+    .lock__title { font: 400 clamp(1.4rem, 4vw, 2.4rem)/1.1 "Uncial Antiqua", Georgia, serif; color: var(--beam); text-shadow: 0 0 24px rgba(236, 228, 206, .18); }
+    .lock__hint { font-variant: small-caps; letter-spacing: .08em; color: var(--muted); }
+    .lock:focus-visible { outline: 1px solid var(--beam); outline-offset: -8px; }
     .back { position: fixed; top: 14px; left: 16px; z-index: 3; font-variant: small-caps; letter-spacing: .08em; color: var(--muted); text-decoration: none; }
     .back:hover, .back:focus-visible { color: var(--beam); }
     .embedded .back { display: none; }
-    @media (prefers-reduced-motion: reduce) { .loader::before { animation: none; } .loader { transition: none; } }
+    @media (prefers-reduced-motion: reduce) { .loader::before, .loader.is-unpacking .loader__fill { animation: none; } .loader { transition: none; } }
   </style>
 </head>
 <body>
@@ -60,6 +73,12 @@
     <p class="loader__note">Headphones on.</p>
     <p class="loader__error"></p>
   </div>
+
+  <button class="lock" type="button" hidden data-resume="Click to look around"
+    data-wait="One moment, then click again" data-hint="Esc gives the mouse back">
+    <span class="lock__title"></span>
+    <span class="lock__hint"></span>
+  </button>
 
   <script src="/play/player.js" data-build="LastKnownLocation" data-parts="2" data-title="Last Known Location" data-home="/games/last-known-location/"
     data-progress="Finding the farmhouse|Checking the torch|On the porch|The door is open"></script>

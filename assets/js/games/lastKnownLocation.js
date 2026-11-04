@@ -1,4 +1,4 @@
-import { onFrame, reducedMotion, lerp } from "../core/ticker.js";
+import { onFrame, onRead, reducedMotion, lerp } from "../core/ticker.js";
 
 // Last Known Location: the hero is lit by one torch that follows the pointer (or drifts by itself on touch screens),
 // and every so often the beam stutters, the way the one in the game does before something is there.
@@ -14,9 +14,12 @@ export function initLastKnownLocation() {
   let nextFlicker = 4;
   let flickerUntil = 0;
 
+  let rect = null;
+  onRead(() => {
+    rect = hero.getBoundingClientRect();
+  });
   onFrame((s, dt) => {
-    const rect = hero.getBoundingClientRect();
-    if (rect.bottom < 0) {
+    if (!rect || rect.bottom < 0) {
       return;
     }
     const tx = s.hasPointer ? s.pointerX : rect.left + rect.width * (0.5 + Math.sin(s.time * 0.25) * 0.28);

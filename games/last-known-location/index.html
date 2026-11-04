@@ -34,6 +34,16 @@
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       root.classList.add("js");
       root.dataset.motion = stored === "full" || stored === "reduced" ? stored : reduce ? "reduced" : "full";
+      // if the scripts never start (an old browser, a failed download), show the page as it is rather than hidden.
+      // Decided once every deferred and module script has run or failed (DOMContentLoaded waits for them), so a slow
+      // phone is never judged too early; the long timer only covers a download that stalls outright.
+      var check = function () {
+        if (!window.__pucaBooted) {
+          root.classList.remove("js", "is-loading");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () { setTimeout(check, 0); });
+      setTimeout(check, 30000);
     })();
   </script>
   <script src="/assets/vendor/gsap.min.js" defer></script>
@@ -81,7 +91,7 @@
         <li><a href="/games/last-known-location/" aria-current="page">Last Known Location</a></li>
       </ul>
       <a class="nav__brand" href="/" aria-label="Púca Games, home" data-magnetic>
-        <img src="/assets/img/logo.png" alt="" width="409" height="370">
+        <img src="/assets/img/logo-144.png" srcset="/assets/img/logo-144.png 2x, /assets/img/logo-216.png 3x" alt="" width="409" height="370" fetchpriority="high">
       </a>
       <ul class="nav__list nav__list--right">
         <li><a href="/press/">Press</a></li>
@@ -140,11 +150,14 @@
               <p class="play__title" aria-hidden="true">Last Known Location</p>
               <button class="btn btn--primary play__start" type="button" data-play-start><span class="btn__shine"></span>Open the door</button>
               <p class="play__note">About 155 MB · a desktop browser with a mouse · headphones on</p>
+              <p class="play__away">Made for a computer with a mouse and headphones. Send yourself the link and open the door there.</p>
+              <button class="btn btn--primary play__share" type="button" data-play-share><span class="btn__shine"></span>Send me the link</button>
+              <button class="play__anyway" type="button" data-play-anyway>Load it here anyway (155 MB)</button>
             </div>
           </div>
         </div>
         <div class="play__bar">
-          <p class="play__status" data-play-status>It loads only when you press play, and goes quiet if you scroll away.</p>
+          <p class="play__status" role="status" aria-live="polite" data-play-status>It loads only when you press play, and pauses if you scroll away.</p>
           <div class="play__buttons">
             <button class="play__button" type="button" data-play-fullscreen hidden>Full screen</button>
             <button class="play__button" type="button" data-play-stop hidden>Stop</button>

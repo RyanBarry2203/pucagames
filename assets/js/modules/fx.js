@@ -1,4 +1,4 @@
-import { onFrame, finePointer, reducedMotion } from "../core/ticker.js";
+import { onFrame, onPauseChange, isPaused, finePointer, reducedMotion } from "../core/ticker.js";
 
 const TAU = Math.PI * 2;
 const particles = [];
@@ -7,7 +7,7 @@ let ctx = null;
 // A full-screen canvas above the page (pointer-events: none) for loose particles: the gold dust that trails the
 // cursor, bursts when you click, and the trails the running animals leave. Other modules call emit().
 export function emit(x, y, options = {}) {
-  if (!ctx) {
+  if (!ctx || isPaused()) {
     return;
   }
   const { count = 1, speed = 40, spread = TAU, angle = 0, life = 1, size = 1.6, ember = 0.15, rise = 30 } = options;
@@ -44,6 +44,14 @@ export function initFx() {
   }
   resize();
   window.addEventListener("resize", resize);
+  // nothing is drawn while the frame loop holds still (a game on screen), so drop what was in flight rather than
+  // leave it frozen over the game
+  onPauseChange((paused) => {
+    if (paused) {
+      particles.length = 0;
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    }
+  });
 
   if (finePointer) {
     let lastX = 0;

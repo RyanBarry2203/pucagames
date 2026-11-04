@@ -41,10 +41,23 @@
     .loader__error { display: none; max-width: 46ch; margin: 0; color: #e9906d; }
     .loader.is-error .loader__error { display: block; }
     .loader.is-error .loader__bar, .loader.is-error .sight { display: none; }
+    .loader.is-unpacking .loader__fill { width: 100% !important; background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent) no-repeat; background-size: 45% 100%; animation: unpack 1.5s linear infinite; }
+    @keyframes unpack { from { background-position: -80% 0; } to { background-position: 180% 0; } }
+    /* covers the game whenever it doesn't have the mouse: the click that takes it away is the click that locks it */
+    .lock {
+      position: fixed; inset: 0; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px;
+      font: inherit; color: var(--text); text-align: center; cursor: pointer; border: 0;
+      background: radial-gradient(70% 60% at 50% 50%, rgba(11, 8, 6, .55), rgba(11, 8, 6, .82));
+    }
+    .lock[hidden] { display: none; }
+    .lock__title { font: 400 clamp(1.5rem, 4.4vw, 2.6rem)/1.1 "Uncial Antiqua", Georgia, serif; color: var(--gold-bright); text-shadow: 0 4px 24px #000; }
+    .lock__hint { font-variant: small-caps; letter-spacing: .08em; color: var(--muted); }
+    .lock:focus-visible { outline: 2px solid var(--gold); outline-offset: -8px; }
     .back { position: fixed; top: 14px; left: 16px; z-index: 3; font-variant: small-caps; letter-spacing: .08em; color: var(--muted); text-decoration: none; }
     .back:hover, .back:focus-visible { color: var(--gold-bright); }
     .embedded .back { display: none; }
-    @media (prefers-reduced-motion: reduce) { .sight { animation: none; } .loader { transition: none; } }
+    @media (prefers-reduced-motion: reduce) { .sight, .loader.is-unpacking .loader__fill { animation: none; } .loader { transition: none; } }
   </style>
 </head>
 <body>
@@ -61,7 +74,13 @@
     <p class="loader__error"></p>
   </div>
 
-  <script src="/play/player.js" data-build="SangueFrio" data-title="A Sangue Frio" data-home="/games/a-sangue-frio/"
+  <button class="lock" type="button" hidden data-start="Click to take aim" data-resume="Paused · click to take aim again"
+    data-wait="One moment, then click again" data-hint="The mouse is your gun · Esc gives it back">
+    <span class="lock__title"></span>
+    <span class="lock__hint"></span>
+  </button>
+
+  <script src="/play/player.js" data-build="SangueFrio" data-lock="always" data-title="A Sangue Frio" data-home="/games/a-sangue-frio/"
     data-progress="Loading the guns|Climbing the Morro|Taking cover|Safety off"></script>
 </body>
 </html>

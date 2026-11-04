@@ -1,5 +1,5 @@
 import { gsap } from "../core/engine.js";
-import { onFrame, finePointer, reducedMotion, watchVisibility, clamp, lerp } from "../core/ticker.js";
+import { onFrame, onRead, finePointer, reducedMotion, watchVisibility, clamp, lerp } from "../core/ticker.js";
 
 // Where the black sun sits in the key art (fractions of the image), and its radius as a fraction of image height.
 const SUN = { x: 0.5, y: 0.273, r: 0.085 };
@@ -197,9 +197,12 @@ export function initCorazonNegro() {
   // the lantern follows the pointer (or drifts by itself on touch screens)
   const lanternEl = hero.querySelector("[data-lantern]");
   const lantern = { x: window.innerWidth / 2, y: window.innerHeight * 0.4 };
+  let rect = null;
+  onRead(() => {
+    rect = hero.getBoundingClientRect();
+  });
   onFrame((s, dt) => {
-    const rect = hero.getBoundingClientRect();
-    if (rect.bottom < 0) {
+    if (!rect || rect.bottom < 0) {
       return;
     }
     const tx = s.hasPointer ? s.pointerX : rect.left + rect.width * (0.5 + Math.sin(s.time * 0.4) * 0.3);

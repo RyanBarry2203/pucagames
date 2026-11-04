@@ -1,4 +1,4 @@
-import { onFrame } from "../core/ticker.js";
+import { onFrame, onRead } from "../core/ticker.js";
 
 // Sticky header: hides while scrolling down, returns on scroll up, shows reading progress and the current section.
 export function initHeader() {
@@ -28,17 +28,22 @@ export function initHeader() {
   });
 
   let lastProgress = -1;
+  let pageHeight = 0;
+  onRead(() => {
+    pageHeight = document.documentElement.scrollHeight;
+  });
   onFrame((state) => {
     const scrolled = state.scrollY > 40;
     header.classList.toggle("is-scrolled", scrolled);
     const goingDown = state.velocity > 1.5 && state.scrollY > state.vh * 0.6;
-    if (goingDown && menu.hidden) {
+    // never slides away from a keyboard user who is tabbing through it
+    if (goingDown && menu.hidden && !header.querySelector(":focus-visible")) {
       header.classList.add("is-hidden");
     } else if (state.velocity < -1.5 || state.scrollY < state.vh * 0.6) {
       header.classList.remove("is-hidden");
     }
 
-    const max = document.documentElement.scrollHeight - state.vh;
+    const max = pageHeight - state.vh;
     const progress = max > 0 ? state.scrollY / max : 0;
     if (Math.abs(progress - lastProgress) > 0.001) {
       header.style.setProperty("--progress", progress.toFixed(4));

@@ -1,4 +1,5 @@
-import { onFrame, reducedMotion, watchVisibility, clamp } from "../core/ticker.js";
+import { onFrame, onRead, reducedMotion, watchVisibility, clamp } from "../core/ticker.js";
+import { world } from "./worldState.js";
 
 const TAU = Math.PI * 2;
 const GOLD = "240, 223, 168";
@@ -135,8 +136,17 @@ export function initSky() {
     return;
   }
 
+  // the 3D world draws its own sky once it is up; this canvas is its fallback and stops drawing underneath it
+  const drawing = () => visibility.visible && !world.active;
+  let top = 0;
+  onRead(() => {
+    if (drawing()) {
+      top = canvas.getBoundingClientRect().top;
+    }
+  });
+
   onFrame((s, dt) => {
-    if (!visibility.visible) {
+    if (!drawing()) {
       return;
     }
     ctx.clearRect(0, 0, width, height);
@@ -154,6 +164,6 @@ export function initSky() {
       nextShot = 7 + Math.random() * 9;
     }
     drawShootingStar(dt);
-    drawMotes(s, dt, canvas.getBoundingClientRect().top);
+    drawMotes(s, dt, top);
   });
 }

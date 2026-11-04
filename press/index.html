@@ -32,6 +32,16 @@
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       root.classList.add("js");
       root.dataset.motion = stored === "full" || stored === "reduced" ? stored : reduce ? "reduced" : "full";
+      // if the scripts never start (an old browser, a failed download), show the page as it is rather than hidden.
+      // Decided once every deferred and module script has run or failed (DOMContentLoaded waits for them), so a slow
+      // phone is never judged too early; the long timer only covers a download that stalls outright.
+      var check = function () {
+        if (!window.__pucaBooted) {
+          root.classList.remove("js", "is-loading");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () { setTimeout(check, 0); });
+      setTimeout(check, 30000);
     })();
   </script>
   <script type="module" src="/assets/js/page.js"></script>
@@ -53,7 +63,7 @@
         <li><a href="/games/last-known-location/">Last Known Location</a></li>
       </ul>
       <a class="nav__brand" href="/" aria-label="Púca Games, home" data-magnetic>
-        <img src="/assets/img/logo.png" alt="" width="409" height="370">
+        <img src="/assets/img/logo-144.png" srcset="/assets/img/logo-144.png 2x, /assets/img/logo-216.png 3x" alt="" width="409" height="370" fetchpriority="high">
       </a>
       <ul class="nav__list nav__list--right">
         <li><a href="/press/" aria-current="page">Press</a></li>

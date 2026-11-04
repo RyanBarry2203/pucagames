@@ -239,6 +239,14 @@ p {
   height: 26px;
 }
 
+.has-cursor .cursor {
+  transition: opacity .3s;
+}
+
+.has-cursor .cursor.is-away {
+  opacity: 0;
+}
+
 /* ---------- Buttons ---------- */
 
 .btn {
@@ -334,6 +342,15 @@ p {
 
 .site-header.is-hidden {
   transform: translateY(-100%);
+}
+
+.site-header.is-hidden:has(:focus-visible) {
+  transform: none;
+}
+
+/* sections and <main> take focus after an in-page link (engine.js) only so the keyboard carries on from there */
+[tabindex="-1"]:focus {
+  outline: none;
 }
 
 .site-header__progress {
@@ -1490,6 +1507,127 @@ p {
   }
 }
 
+/* a phone screen that is short as well as narrow (an iPhone SE, or any phone with its toolbars showing): a smaller
+   stage and tighter type, so the bio and all four chips stay inside the pinned screen */
+@media (max-width: 860px) and (max-height: 760px) {
+  .shift__stage {
+    width: min(100%, 24svh);
+  }
+
+  .shift__head h2 {
+    font-size: 1.5rem;
+  }
+
+  .member h3 {
+    font-size: 1.7rem;
+  }
+
+  .member__virtue {
+    margin-bottom: .4em;
+    font-size: .9rem;
+  }
+
+  .member p:last-child {
+    font-size: .86rem;
+    line-height: 1.4;
+  }
+
+  .shift__chip {
+    width: 56px;
+    height: 44px;
+  }
+
+  .shift__nav {
+    gap: 10px;
+    margin-top: 8px;
+  }
+}
+
+/* a laptop screen (1024x640 to 1366x768): the text column gets more of the width so the bio takes fewer lines, and
+   the type tightens, so the whole member and the chips fit inside the pinned screen */
+@media (min-width: 861px) and (max-height: 820px) {
+  .shift__grid {
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+    gap: clamp(20px, 3vw, 48px);
+  }
+
+  .shift__stage {
+    width: min(100%, 56vh);
+  }
+
+  .shift__head h2 {
+    font-size: clamp(1.8rem, 1rem + 2vw, 2.6rem);
+  }
+
+  .member__shape {
+    margin-bottom: .2em;
+  }
+
+  .member h3 {
+    font-size: clamp(2rem, 1.2rem + 2vw, 3rem);
+  }
+
+  .member__virtue {
+    margin-bottom: .6em;
+  }
+
+  .member p:last-child {
+    max-width: 62ch;
+    font-size: .98rem;
+    line-height: 1.5;
+  }
+
+  .shift__nav {
+    margin-top: 14px;
+  }
+
+  .shift__chip {
+    width: 66px;
+    height: 50px;
+  }
+}
+
+/* Too short to pin at all (shapeshifter.js adds .is-compact): the section scrolls like any other and the chips pick
+   the shape. Wide enough, the stage sits beside the text. */
+.shift.is-compact {
+  height: auto;
+}
+
+.shift.is-compact .shift__sticky {
+  position: relative;
+  height: auto;
+  padding-block: 56px 48px;
+}
+
+.shift.is-compact .shift__stage {
+  width: min(70%, 240px);
+}
+
+@media (max-height: 600px) and (min-width: 560px) {
+  .shift.is-compact .shift__grid {
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+    grid-template-rows: auto;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .shift.is-compact .shift__stage {
+    width: min(100%, 62svh);
+  }
+
+  .shift.is-compact .shift__members {
+    text-align: left;
+  }
+
+  .shift.is-compact .member p:last-child {
+    margin-inline: 0;
+  }
+
+  .shift.is-compact .shift__nav {
+    justify-content: flex-start;
+  }
+}
+
 /* ---------- Lore ---------- */
 
 .lore {
@@ -1852,7 +1990,7 @@ body::after {
   animation-play-state: paused !important;
 }
 
-/* ---------- Particles and running animals (fixed overlays) ---------- */
+/* ---------- Particles (a fixed overlay) and the running animals ---------- */
 
 .fx {
   position: fixed;
@@ -1864,30 +2002,58 @@ body::after {
   mix-blend-mode: screen;
 }
 
-.runners {
-  position: fixed;
-  inset: auto 0 4vh;
-  z-index: 45;
-  height: 0;
+/* Each running animal has its own lane (runners.js): a strip of the page just above the section it introduces,
+   laid over that section's empty top padding, so it never crosses the section's text. The lane grows with the
+   window, but never past the padding of the section below it. */
+.run-lane {
+  --lane: clamp(60px, 8.5vw, 124px);
+  position: relative;
+  z-index: 2;
+  height: var(--lane);
+  margin-bottom: calc(var(--lane) * -1);
+  overflow-x: clip;
   pointer-events: none;
 }
 
+/* the games section's padding is only the header's height plus 8px when it becomes the pinned strip on wide screens,
+   so the hound's lane stays inside the header's height there */
+.run-lane--hound {
+  --lane: min(clamp(60px, 8.5vw, 124px), calc(var(--header-h) - 4px));
+}
+
+/* the team section is a pinned stage with no padding to spare: this lane takes its own space instead */
+.run-lane--own {
+  margin-block: 12px 0;
+}
+
 .runner {
+  --size: 1;
   position: absolute;
   left: 0;
   bottom: 0;
-  width: clamp(160px, 22vw, 340px);
+  height: calc(var(--lane) * var(--size));
+  aspect-ratio: var(--aspect, 4 / 3);
   visibility: hidden;
   opacity: 0;
-  filter: drop-shadow(0 0 20px rgba(205, 181, 126, .4));
+  filter: drop-shadow(0 0 16px rgba(205, 181, 126, .4));
+}
+
+.runner--hound {
+  --aspect: 900 / 479;
 }
 
 .runner--boar {
-  width: clamp(150px, 19vw, 300px);
+  --aspect: 900 / 494;
+  --size: .9;
 }
 
 .runner--fox {
-  width: clamp(130px, 17vw, 270px);
+  --aspect: 900 / 351;
+  --size: .74;
+}
+
+.runner--horse {
+  --aspect: 900 / 505;
 }
 
 .runner__body {
@@ -3221,6 +3387,32 @@ main h2 {
   list-style: none;
 }
 
+/* Fingers need bigger targets than the text: the links keep their look and gain an invisible 44px-tall hit area */
+@media (pointer: coarse) {
+  .site-footer__links a,
+  .game-card__more a,
+  .press-game a:not(.btn),
+  dd > a {
+    display: inline-block;
+    padding-block: 11px;
+    margin-block: -11px;
+  }
+
+  .site-footer__links {
+    gap: 22px;
+  }
+
+  .hero__scroll::before {
+    content: "";
+    position: absolute;
+    inset: -12px -18px;
+  }
+
+  .play__button {
+    min-height: 44px;
+  }
+}
+
 @media (max-width: 860px) {
   .page-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -3292,15 +3484,20 @@ main h2 {
   padding: clamp(10px, 1.4vw, 16px);
 }
 
+/* never taller than the window, so the whole screen and its bar fit at once on a 1280x720 or 1366x768 laptop */
 .play__screen {
   position: relative;
+  width: min(100%, calc((100vh - 170px) * 16 / 9));
+  width: min(100%, calc((100svh - 170px) * 16 / 9));
   aspect-ratio: 16 / 9;
+  margin-inline: auto;
   overflow: hidden;
   background: #000;
   border: 1px solid rgba(205, 181, 126, .28);
 }
 
 .play__screen:fullscreen {
+  width: 100%;
   border: 0;
 }
 
@@ -3449,9 +3646,64 @@ main h2 {
   color: var(--text);
 }
 
-/* the page's own cursor would sit frozen at the frame's edge while the game has the mouse */
-.has-cursor body:has(.play.is-playing .play__screen:hover) .cursor {
+/* While a game is on screen (html.is-gaming, from play.js) the page's effects hold still, so the gold cursor would
+   freeze where it was: the system cursor takes over instead. The film grain and the dust canvas step aside too, so
+   nothing is blended over the game's picture every frame. */
+.has-cursor.is-gaming .cursor {
   opacity: 0;
+  transition: none;
+}
+
+.is-gaming body::after {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+.is-gaming .fx {
+  visibility: hidden;
+}
+
+/* phones and tablets with no mouse (play.js): the same cover, but it offers the link for later */
+.play__away,
+.play__share,
+.play__anyway {
+  display: none;
+}
+
+.play--desktop-only .play__start,
+.play--desktop-only .play__note {
+  display: none;
+}
+
+.play--desktop-only .play__away {
+  display: block;
+  max-width: 34ch;
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text);
+  text-shadow: 0 2px 12px #000;
+}
+
+.play--desktop-only .play__share {
+  display: inline-flex;
+}
+
+.play--desktop-only .play__anyway {
+  display: inline-block;
+  min-height: 44px;
+  padding: 0 12px;
+  font: italic 500 .95rem/1 var(--font-body);
+  color: var(--muted);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.play--desktop-only .play__anyway:hover,
+.play--desktop-only .play__anyway:focus-visible {
+  color: var(--gold-bright);
 }
 
 /* A Sangue Frio: a warm sunset grade, and a gold sight that follows the pointer across the cover */
@@ -3492,10 +3744,59 @@ main h2 {
 
 @media (max-width: 860px) {
   .play__screen {
+    width: min(100%, calc((100vh - 170px) * 4 / 3));
+    width: min(100%, calc((100svh - 170px) * 4 / 3));
     aspect-ratio: 4 / 3;
   }
 
+  .play__screen:fullscreen {
+    width: 100%;
+  }
+
   .play__title {
+    display: none;
+  }
+
+  .play__start {
+    min-height: 52px;
+  }
+
+  .play__away {
+    font-size: .95rem;
+  }
+}
+
+/* the smallest phones (320px wide): the cover's copy and both buttons still fit inside its 4:3 screen */
+@media (max-width: 360px) {
+  .play--desktop-only .play__content {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .play--desktop-only .play__away {
+    font-size: .95rem;
+    line-height: 1.4;
+  }
+
+  .play--desktop-only .play__share {
+    min-height: 44px;
+    padding-block: 0;
+    padding-inline: 16px;
+    font-size: 1rem;
+  }
+
+  .play--desktop-only .play__anyway {
+    min-height: 40px;
+  }
+}
+
+/* a landscape phone: the cover keeps to one line of copy and its buttons */
+@media (max-height: 480px) {
+  .play--desktop-only .play__content {
+    gap: 6px;
+  }
+
+  .play--desktop-only .play__away {
     display: none;
   }
 }

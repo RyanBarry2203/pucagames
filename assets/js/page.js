@@ -17,6 +17,9 @@ import { initSangueFrio } from "./games/sangueFrio.js";
 import { initCorazonNegro } from "./games/corazonNegro.js";
 import { initLastKnownLocation } from "./games/lastKnownLocation.js";
 
+// the <head> script shows the page as it is if this never runs
+window.__pucaBooted = true;
+
 // Entry point for the inner pages (games, press): the same motion engine as the home page, plus each game's own
 // signature interaction, chosen by <body data-game>.
 const GAMES = {

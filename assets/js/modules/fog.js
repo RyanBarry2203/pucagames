@@ -1,4 +1,5 @@
-import { onFrame, state, reducedMotion, watchVisibility } from "../core/ticker.js";
+import { onFrame, onRead, state, reducedMotion, watchVisibility } from "../core/ticker.js";
+import { world } from "./worldState.js";
 
 // Living mist over the hero, drawn by a WebGL fragment shader. Layered value noise (fbm) is warped by itself so the
 // fog curls rather than slides, and it parts in a swirl around the pointer. `fog.density` (0..1) is animated by the
@@ -103,9 +104,9 @@ export function initFog() {
   window.addEventListener("resize", resize);
 
   const pointer = { x: 0.5, y: 0.3 };
+  let rect = null;
   function draw(time) {
-    const rect = canvas.getBoundingClientRect();
-    if (state.hasPointer) {
+    if (state.hasPointer && rect) {
       pointer.x += ((state.pointerX - rect.left) / rect.width - pointer.x) * 0.08;
       pointer.y += (1 - (state.pointerY - rect.top) / rect.height - pointer.y) * 0.08;
     }
@@ -120,7 +121,20 @@ export function initFog() {
     return;
   }
   const visibility = watchVisibility(canvas, "0px");
-  onFrame((s) => {
+  const stopReading = onRead(() => {
+    if (visibility.visible) {
+      rect = canvas.getBoundingClientRect();
+    }
+  });
+  const stopDrawing = onFrame((s) => {
+    // the 3D world has its own mist: this is its fallback, so once the world is up it stops and gives its WebGL
+    // context back (iOS Safari only allows a few at once)
+    if (world.active) {
+      stopReading();
+      stopDrawing();
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      return;
+    }
     if (visibility.visible) {
       draw(s.time);
     }

@@ -4,12 +4,12 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { onFrame, state, reducedMotion, watchVisibility, lerp } from "../core/ticker.js";
+import { world } from "./worldState.js";
 
 // The hero as a real 3D scene. Each painted layer is a flat panel at its own distance from the camera; fog darkens
 // the far ones, gold motes drift through the space between them, mist banks roll at several depths and a bloom pass
 // makes the moon and the gold glow. Scrolling flies the camera forward through the brambles towards the stones
 // (`world.fly`, animated by journey.js) and the pointer steers it, so the parallax is real perspective.
-export const world = { fly: 0, active: false };
 
 const FOV = 38;
 const CAMERA_Z = 10;
@@ -89,7 +89,9 @@ export async function initWorld() {
   } catch {
     return;
   }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  // phones and tablets: a lighter render (fewer pixels, fewer motes) for the same picture, and their battery
+  const light = window.matchMedia("(max-width: 900px), (pointer: coarse)").matches;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, light ? 1.25 : 1.5));
   renderer.setClearColor(BG);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
@@ -167,7 +169,7 @@ export async function initWorld() {
   });
 
   // gold motes scattered through the whole depth of the scene
-  const MOTES = 650;
+  const MOTES = light ? 320 : 650;
   const positions = new Float32Array(MOTES * 3);
   const seeds = new Float32Array(MOTES);
   for (let i = 0; i < MOTES; i++) {
@@ -263,14 +265,16 @@ export async function initWorld() {
   const visibility = watchVisibility(hero, "0px");
   let lookX = 0;
   let lookY = 0;
+  let tilted = false;
 
   onFrame((s, dt) => {
     if (!visibility.visible) {
       return;
     }
     const ease = 1 - Math.pow(1 - 0.045, dt * 60);
-    lookX = lerp(lookX, s.hasPointer ? s.nx : 0, ease);
-    lookY = lerp(lookY, s.hasPointer ? s.ny : 0, ease);
+    const steering = s.hasPointer || tilted;
+    lookX = lerp(lookX, steering ? s.nx : 0, ease);
+    lookY = lerp(lookY, steering ? s.ny : 0, ease);
 
     // fly forward through the brambles towards the stones; the pointer steers and the camera breathes a little
     const fly = world.fly;
@@ -298,7 +302,7 @@ export async function initWorld() {
       }
       state.nx = Math.max(-1, Math.min(1, event.gamma / 30));
       state.ny = Math.max(-1, Math.min(1, (event.beta - 45) / 30));
-      state.hasPointer = true;
+      tilted = true;
     });
   }
 }

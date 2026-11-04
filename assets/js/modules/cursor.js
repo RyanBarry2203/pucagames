@@ -3,6 +3,7 @@ import { onFrame, state, finePointer, reducedMotion, lerp } from "../core/ticker
 const INTERACTIVE = "a, button, [data-tilt], [data-magnetic]";
 
 // A gold dot that tracks the pointer exactly and a ring that trails behind it. Mouse/trackpad only.
+// It hides (a class, so stylesheet rules can hide it too) when the pointer leaves the window.
 export function initCursor() {
   const cursor = document.querySelector("[data-cursor]");
   if (!cursor || !finePointer || reducedMotion) {
@@ -20,12 +21,8 @@ export function initCursor() {
   });
   document.addEventListener("pointerdown", () => cursor.classList.add("is-down"));
   document.addEventListener("pointerup", () => cursor.classList.remove("is-down"));
-  document.documentElement.addEventListener("pointerleave", () => {
-    cursor.style.opacity = "0";
-  });
-  document.documentElement.addEventListener("pointerenter", () => {
-    cursor.style.opacity = "1";
-  });
+  document.documentElement.addEventListener("pointerleave", () => cursor.classList.add("is-away"));
+  document.documentElement.addEventListener("pointerenter", () => cursor.classList.remove("is-away"));
 
   onFrame((s, dt) => {
     if (!s.hasPointer) {

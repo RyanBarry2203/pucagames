@@ -8,7 +8,6 @@ import { initMagnetic } from "./modules/magnetic.js";
 import { initScene } from "./modules/scene.js";
 import { initSky } from "./modules/sky.js";
 import { initFog } from "./modules/fog.js";
-import { initWorld } from "./modules/world.js";
 import { initJourney } from "./modules/journey.js";
 import { initFx } from "./modules/fx.js";
 import { initRunners } from "./modules/runners.js";
@@ -24,6 +23,9 @@ import { initMotionToggle } from "./modules/motionToggle.js";
 import { initVelocity } from "./modules/velocity.js";
 import { initScenes } from "./modules/scenes.js";
 
+// the <head> script shows the page as it is if this never runs
+window.__pucaBooted = true;
+
 initEngine();
 initSplit();
 initHeader();
@@ -32,7 +34,9 @@ initMagnetic();
 initScene();
 initSky();
 initFog();
-initWorld();
+// The 3D hero (three.js, through the import map) loads on its own, so if it can't load nothing else breaks: the flat
+// layers, the sky canvas and the fog are already there as its fallback.
+import("./modules/world.js").then((module) => module.initWorld()).catch(() => {});
 initFx();
 initMarquee();
 initReveal();

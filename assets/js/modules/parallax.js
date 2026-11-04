@@ -35,7 +35,7 @@ export function initParallax() {
       duration: 1.1,
       ease: "expo.out",
       stagger: 0.08,
-      scrollTrigger: { trigger: heading, start: "top 88%", once: true },
+      scrollTrigger: { trigger: heading, start: "top 88%", toggleActions: "play none none none" },
     });
   }
 }

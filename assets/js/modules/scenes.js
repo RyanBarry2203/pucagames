@@ -1,5 +1,5 @@
 import { gsap } from "../core/engine.js";
-import { onFrame, reducedMotion, finePointer, clamp, lerp } from "../core/ticker.js";
+import { onFrame, onRead, reducedMotion, finePointer, clamp, lerp } from "../core/ticker.js";
 
 // Section choreography, scrubbed to the scroll so it plays forwards and backwards with you.
 // - Each section has a huge outlined word in Irish drifting sideways behind it.
@@ -79,7 +79,7 @@ export function initScenes() {
       ease: "expo.out",
       stagger: 0.14,
       clearProps: "transform",
-      scrollTrigger: { trigger: newsCards[0].parentElement, start: "top 88%", once: true },
+      scrollTrigger: { trigger: newsCards[0].parentElement, start: "top 88%", toggleActions: "play none none none" },
     });
   }
 
@@ -118,9 +118,12 @@ export function initScenes() {
   if (stage && finePointer) {
     let tx = 0;
     let ty = 0;
+    let rect = null;
+    onRead(() => {
+      rect = stage.getBoundingClientRect();
+    });
     onFrame((s, dt) => {
-      const rect = stage.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > s.vh) {
+      if (!rect || rect.bottom < 0 || rect.top > s.vh) {
         return;
       }
       const dx = clamp((s.pointerX - (rect.left + rect.width / 2)) / rect.width, -1, 1);

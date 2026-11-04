@@ -27,14 +27,20 @@ export function initEngine() {
     }
     event.preventDefault();
     lenis.scrollTo(target, { offset: target.id === "top" ? 0 : -40, duration: 1.6 });
+    // what a real jump to the fragment does: the address updates and the keyboard carries on from the target
+    history.replaceState(null, "", link.getAttribute("href"));
+    if (!target.hasAttribute("tabindex")) {
+      target.setAttribute("tabindex", "-1");
+    }
+    target.focus({ preventScroll: true });
   });
 }
 
-export function scrollToY(y) {
+export function scrollToY(y, { immediate = false } = {}) {
   if (lenis) {
-    lenis.scrollTo(y, { duration: 1.4 });
+    lenis.scrollTo(y, immediate ? { immediate: true } : { duration: 1.4 });
   } else {
-    window.scrollTo({ top: y, behavior: reducedMotion ? "auto" : "smooth" });
+    window.scrollTo({ top: y, behavior: reducedMotion || immediate ? "auto" : "smooth" });
   }
 }
 
