@@ -13,7 +13,7 @@ The studio site for Púca Games: plain HTML, CSS and JavaScript, no build step. 
 | `assets/js/main.js` | entry point: starts every module |
 | `assets/js/core/ticker.js` | the one shared animation loop, scroll/pointer state, motion setting |
 | `assets/js/modules/` | one file per effect: hero parallax (`scene`), night sky (`sky`), team section (`shapeshifter`), cursor, tilt, magnetic buttons, marquee, lore word reveal, header, reveal, title split, motion toggle |
-| `assets/img/` | logo, favicons, game key art, social share image (`og-image.jpg`) |
+| `assets/img/` | logo, favicons, art, social share image (`og-image.jpg`) |
 | `CNAME` | the custom domain |
 
 ## How the art works
@@ -39,17 +39,8 @@ won't work).
 
 ## Inner pages
 
-| Path | What |
-|---|---|
-| `games/a-sangue-frio/`, `games/last-known-location/`, `games/corazon-negro/` | one page per game (shared header/footer markup is copied into each page; styles are the "Inner pages" block at the end of `style.css`) |
-| `press/` | press kit: fact sheet, descriptions, downloads, contact |
-| `flyer/` | printable A5 booth flyer (not in the sitemap, `noindex`); print at A5, margins none, background graphics on |
-| `assets/js/page.js` | entry point for inner pages (same modules as `main.js` minus the hero scene) |
-| `assets/img/sprite.svg` | the ornament symbols (`corner`, `triskele`, `triquetra`, `spiral`) for inner pages |
-| `assets/img/qr-pucagames.svg` | offline-generated QR code for `https://pucagames.com` (QR v2, error correction M) |
-| `assets/img/press/`, `assets/press/puca-games-press-kit.zip` | press downloads; re-zip when you change the images |
-
-Inner-page links use absolute paths, so preview from the repo root (`/press/` needs the trailing slash locally).
+There are none at the moment. The "Inner pages" block at the end of `style.css` and `assets/img/sprite.svg` are kept
+for game pages to come.
 
 ## Going live (one-off)
 
